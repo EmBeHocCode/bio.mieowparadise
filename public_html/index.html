@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Meow Ngáo | E-Commerce Student & AI-Assisted Builder</title>
+    <meta name="description"
+        content="Meow Ngáo (EmBeHocCode) - sinh viên IT chuyên ngành E-Commerce, yêu thích xây web product, công cụ hữu ích và sản phẩm có giá trị thực tế.">
+    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preload" href="./assets/tichtuyetavt.webp" as="image" type="image/webp" fetchpriority="high">
+    <link rel="preload" href="./assets/frame/a176.png" as="image" type="image/png" fetchpriority="low">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css?v=mobile-polish2">
+</head>
+
+<body class="static-bg-mode">
+    <div id="bio-load-intro" class="bio-load-intro" aria-hidden="true">
+        <div class="bio-load-atmosphere">
+            <span class="bio-load-gradient bio-load-gradient-a"></span>
+            <span class="bio-load-gradient bio-load-gradient-b"></span>
+            <span class="bio-load-gradient bio-load-gradient-c"></span>
+            <span class="bio-load-scanlines"></span>
+            <span class="bio-load-ui-rail bio-load-ui-rail-left"></span>
+            <span class="bio-load-ui-rail bio-load-ui-rail-right"></span>
+
+            <div class="bio-load-system" id="bio-load-system">
+                <span class="bio-load-ring bio-load-ring-outer"></span>
+                <span class="bio-load-ring bio-load-ring-inner"></span>
+                <span class="bio-load-arc bio-load-arc-a"></span>
+                <span class="bio-load-arc bio-load-arc-b"></span>
+                <span class="bio-load-grid-plane"></span>
+                <span class="bio-load-frame bio-load-frame-a"></span>
+                <span class="bio-load-frame bio-load-frame-b"></span>
+                <span class="bio-load-nexus"></span>
+                <span class="bio-load-nexus-core"></span>
+                <div id="bio-load-traces" class="bio-load-traces" aria-hidden="true"></div>
+                <div id="bio-load-shards" class="bio-load-shards" aria-hidden="true"></div>
+            </div>
+
+            <div class="bio-load-identity" aria-live="polite">
+                <p class="bio-load-kicker">PERSONAL IDENTITY SYSTEM</p>
+                <h1 class="bio-load-name">Meow</h1>
+                <p class="bio-load-caption">Cinematic portfolio environment</p>
+                <div class="bio-load-status-row">
+                    <span id="bio-load-status" class="bio-load-status">INITIALIZING</span>
+                    <span id="bio-load-percent" class="bio-load-percent">0%</span>
+                </div>
+                <div class="bio-load-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span id="bio-load-progress-fill" class="bio-load-progress-fill"></span>
+                </div>
+                <p id="bio-load-substatus" class="bio-load-substatus">Preparing core modules</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Left Controls: UI Toggle -->
+    <div class="top-left-controls">
+        <button id="ui-toggle" class="control-btn" data-vi-title="Ẩn/Hiện Giao diện"
+            data-en-title="Toggle UI Visibility" title="Ẩn/Hiện Giao diện">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+
+    <!-- Top Right Controls: Theme & Language -->
+    <div class="top-right-controls">
+        <button id="theme-manager-toggle" class="control-btn" data-vi-title="Quản lý màu giao diện"
+            data-en-title="Theme Color Manager" title="Quản lý màu giao diện" aria-label="Theme Color Manager">
+            <i class="fas fa-palette"></i>
+        </button>
+        <button id="animated-bg-toggle" class="control-btn animated-bg-toggle is-static" type="button" aria-pressed="false" title="B&#7853;t n&#7873;n &#273;&#7897;ng" aria-label="N&#7873;n t&#297;nh">
+            <i class="fas fa-layer-group"></i>
+            <span class="animated-bg-label">N&#7873;n t&#297;nh</span>
+        </button>
+        <button id="lang-toggle" class="control-btn" data-vi-title="Chuyển đổi Ngôn ngữ" data-en-title="Toggle Language"
+            title="Chuyển đổi Ngôn ngữ">
+            <span class="lang-text">VI</span>
+        </button>
+    </div>
+
+    <div id="scene-control-dock" class="scene-control-dock" aria-hidden="true">
+        <button type="button" class="scene-control-btn" data-scene-action="zoom-out" title="Zoom xa"
+            aria-label="Zoom xa">
+            <i class="fas fa-search-minus"></i>
+        </button>
+        <button type="button" class="scene-control-btn" data-scene-action="reset" title="Đặt lại góc nhìn"
+            aria-label="Đặt lại góc nhìn">
+            <i class="fas fa-crosshairs"></i>
+        </button>
+        <button type="button" class="scene-control-btn" data-scene-action="zoom-in" title="Zoom gần"
+            aria-label="Zoom gần">
+            <i class="fas fa-search-plus"></i>
+        </button>
+        <div class="scene-control-tip" aria-hidden="true">
+            <i class="fas fa-arrows-up-down-left-right"></i>
+            <span>Drag rotate · wheel zoom</span>
+        </div>
+    </div>
+
+    <div id="theme-manager-panel" class="theme-manager-panel" aria-hidden="true">
+        <div class="theme-manager-header">
+            <div class="theme-manager-heading">
+                <span class="theme-manager-kicker" data-vi="Theme Manager" data-en="Theme Manager">Theme Manager</span>
+                <h3 class="theme-manager-title" data-vi="Accent Color" data-en="Accent Color">Accent Color</h3>
+            </div>
+            <button id="theme-manager-close" class="theme-manager-close" type="button"
+                data-vi-title="Đóng trình quản lý màu" data-en-title="Close theme manager"
+                title="Đóng trình quản lý màu" aria-label="Close theme manager">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="theme-manager-section">
+            <div class="theme-manager-label" data-vi="Màu chủ đạo" data-en="Primary Accent">Màu chủ đạo</div>
+            <div class="theme-color-row">
+                <input id="theme-accent-picker" class="theme-color-input" type="color" value="#ff0066"
+                    aria-label="Accent color picker">
+                <input id="theme-accent-hex" class="theme-hex-input" type="text" value="#FF0066" maxlength="7"
+                    spellcheck="false" aria-label="Accent hex value">
+                <div class="theme-color-preview">
+                    <span id="theme-accent-preview" class="theme-color-chip" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-manager-section">
+            <div class="theme-manager-label" data-vi="Preset nhanh" data-en="Quick Presets">Preset nhanh</div>
+            <div class="theme-preset-grid">
+                <button class="theme-preset-btn" type="button" data-color="#ff0066" data-vi="Pink"
+                    data-en="Pink">Pink</button>
+                <button class="theme-preset-btn" type="button" data-color="#8b5cf6" data-vi="Purple"
+                    data-en="Purple">Purple</button>
+                <button class="theme-preset-btn" type="button" data-color="#06b6d4" data-vi="Cyan"
+                    data-en="Cyan">Cyan</button>
+                <button class="theme-preset-btn" type="button" data-color="#3b82f6" data-vi="Blue"
+                    data-en="Blue">Blue</button>
+                <button class="theme-preset-btn" type="button" data-color="#ef4444" data-vi="Red"
+                    data-en="Red">Red</button>
+                <button class="theme-preset-btn" type="button" data-color="#22c55e" data-vi="Green"
+                    data-en="Green">Green</button>
+            </div>
+        </div>
+
+        <div class="theme-manager-section">
+            <div class="theme-manager-label" data-vi="Token áp dụng" data-en="Applied Tokens">Token áp dụng</div>
+            <div class="theme-token-list">
+                <div class="theme-token-item">
+                    <span data-vi="Primary" data-en="Primary">Primary</span>
+                    <code id="theme-token-primary">#FF0066</code>
+                </div>
+                <div class="theme-token-item">
+                    <span data-vi="Border" data-en="Border">Border</span>
+                    <code id="theme-token-border">rgba(255, 0, 102, 0.48)</code>
+                </div>
+                <div class="theme-token-item">
+                    <span data-vi="Glow" data-en="Glow">Glow</span>
+                    <code id="theme-token-glow">rgba(255, 0, 102, 0.34)</code>
+                </div>
+                <div class="theme-token-item">
+                    <span data-vi="Active" data-en="Active">Active</span>
+                    <code id="theme-token-active">rgba(255, 0, 102, 0.12)</code>
+                </div>
+                <div class="theme-token-item">
+                    <span data-vi="Accent Text" data-en="Accent Text">Accent Text</span>
+                    <code id="theme-token-text">#FF0066</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-manager-actions">
+            <button id="theme-apply-btn" class="theme-action-btn theme-action-btn-primary" type="button" data-vi="Apply"
+                data-en="Apply">Apply</button>
+            <button id="theme-save-btn" class="theme-action-btn" type="button" data-vi="Save Theme"
+                data-en="Save Theme">Save Theme</button>
+            <button id="theme-reset-btn" class="theme-action-btn" type="button" data-vi="Reset Default"
+                data-en="Reset Default">Reset Default</button>
+        </div>
+    </div>
+
+    <!-- Background Effects -->
+    <div class="bg-fx">
+        <iframe id="site3d-bg-frame" class="site3d-bg-frame" data-src="./assets/site3d-bg/index.html"
+            title="Site-3D background" loading="lazy" aria-hidden="true" tabindex="-1"></iframe>
+    </div>
+
+    <!-- Main Layout Container -->
+    <div class="app-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Left Sidebar: Fixed Profile Panel -->
+        <aside class="sidebar-wrapper">
+            <div class="profile-card glass-card fade-up">
+                <div class="avatar-container">
+                    <div class="avatar-glow"></div>
+                    <!-- Using existing avatar from assets -->
+                    <div class="avatar-media">
+                        <picture>
+                            <source srcset="./assets/happy1.png" type="image/webp">
+                            <img src="./assets/tichtuyetavt.png" alt="Meow Ngao Avatar" class="avatar" width="80"
+                                height="80" decoding="async" fetchpriority="high"
+                                onerror="this.src='https://github.com/EmBeHocCode.png'">
+                        </picture>
+                        <img class="avatar-frame" src="./assets/frame/a176.png" alt="" aria-hidden="true"
+                            width="144" height="144" decoding="async" fetchpriority="low">
+                    </div>
+                    <div class="status-badge" data-vi="<span class='status-dot'></span> &#272;ang h&#7885;c &amp; build"
+                        data-en="<span class='status-dot'></span> Learning &amp; building">
+                        <span class="status-dot"></span> &#272;ang h&#7885;c &amp; build
+                    </div>
+                </div>
+
+                <h1 class="name">Meow Ngáo</h1>
+                <h2 class="role" data-vi="E-Commerce Student & AI-Assisted Builder"
+                    data-en="E-Commerce Student & AI-Assisted Builder">E-Commerce Student & AI-Assisted Builder</h2>
+                <p class="bio"
+                    data-vi="Năm 3 IT | TP.HCM, Việt Nam<br><br>Mình là EmBeHocCode. Mình theo hướng E-Commerce, thích xây web product, mini tools và dùng AI để tăng tốc triển khai nhưng vẫn giữ tư duy chiến lược và planning ở phía con người."
+                    data-en="3rd-year IT student | Ho Chi Minh City, Vietnam<br><br>I'm EmBeHocCode. I focus on E-Commerce, enjoy building web products and mini tools, and use AI to accelerate execution while keeping strategy and planning human-led.">
+                    Năm 3 IT | TP.HCM, Việt Nam<br><br>
+                    Mình là EmBeHocCode. Mình theo hướng E-Commerce, thích xây web product, mini tools và dùng AI để
+                    tăng tốc triển khai nhưng vẫn giữ tư duy chiến lược và planning ở phía con người.
+                </p>
+
+                <!-- Focus Card -->
+                <div class="discord-widget fade-up delay-1">
+                    <div id="focus-status-bubble" class="discord-status-bubble focus-status-bubble show"></div>
+                    <div class="focus-card-main">
+                        <div class="discord-avatar-container">
+                            <img src="./assets/avatar.gif" class="discord-avatar" alt="EmBeHocCode Avatar" width="54"
+                                height="54" decoding="async" onerror="this.src='https://github.com/EmBeHocCode.png'">
+                            <div class="discord-status-dot online"></div>
+                        </div>
+                        <div class="discord-info">
+                            <div class="discord-name-row">
+                                <span class="discord-username" data-vi="Hiện đang tập trung"
+                                    data-en="Current focus">Hiện đang tập trung</span>
+                            </div>
+                            <div class="discord-activity">
+                                <div class="discord-act-main" data-vi="E-Commerce, AI workflow và web product"
+                                    data-en="E-Commerce, AI workflow, and web products">E-Commerce, AI workflow và web
+                                    product</div>
+                            </div>
+                            <div class="focus-message"
+                                data-vi="Message: mở trao đổi project nghiêm túc, thích brief rõ và mục tiêu rõ."
+                                data-en="Message: open to serious project discussions, with clear briefs and clear goals.">
+                                Message: mở trao đổi project nghiêm túc, thích brief rõ và mục tiêu rõ.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="nav-menu">
+                    <a href="#about" class="nav-link active" data-vi="<i class='fas fa-user-astronaut'></i> Về Tôi"
+                        data-en="<i class='fas fa-user-astronaut'></i> About Me"><i class="fas fa-user-astronaut"></i>
+                        Về Tôi</a>
+                    <a href="#services" class="nav-link" title="Chuyên Môn"
+                        data-vi="<i class='fas fa-briefcase'></i> Chuyên Môn"
+                        data-en="<i class='fas fa-briefcase'></i> Expertise"><i class="fas fa-briefcase"></i> Chuyên
+                        Môn</a>
+                    <a href="#skills" class="nav-link" data-vi="<i class='fas fa-layer-group'></i> Kỹ Năng / Công Nghệ"
+                        data-en="<i class='fas fa-layer-group'></i> Skills / Tech"><i class="fas fa-layer-group"></i> Kỹ
+                        Năng / Công Nghệ</a>
+                    <a href="#focus" class="nav-link" data-vi="<i class='fas fa-bullseye'></i> Tập Trung"
+                        data-en="<i class='fas fa-bullseye'></i> Focus"><i class="fas fa-bullseye"></i> Tập Trung</a>
+                    <a href="#security-lab" class="nav-link" data-vi="<i class='fas fa-shield-halved'></i> Security Lab"
+                        data-en="<i class='fas fa-shield-halved'></i> Security Lab"><i class="fas fa-shield-halved"></i>
+                        Security Lab</a>
+                    <a href="#experience" class="nav-link" title="Dự Án Tham Gia"
+                        data-vi="<i class='fas fa-project-diagram'></i> Dự Án"
+                        data-en="<i class='fas fa-project-diagram'></i> Projects"><i class="fas fa-project-diagram"></i>
+                        Dự Án</a>
+                    <a href="#connect" class="nav-link" data-vi="<i class='fas fa-paper-plane'></i> Kết Nối"
+                        data-en="<i class='fas fa-paper-plane'></i> Connect"><i class="fas fa-paper-plane"></i> Kết
+                        Nối</a>
+                </nav>
+
+                <div class="social-links">
+                    <a href="https://github.com/EmBeHocCode" target="_blank" rel="noopener noreferrer"
+                        aria-label="GitHub" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="https://bio.mieowparadise.io.vn/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Website" class="social-btn"><i class="fas fa-globe"></i></a>
+                    <a href="https://www.facebook.com/hungng.0505" target="_blank" rel="noopener noreferrer"
+                        aria-label="Facebook" class="social-btn"><i class="fab fa-facebook"></i></a>
+                    <a href="https://discord.com/users/embi_dev" target="_blank" rel="noopener noreferrer"
+                        aria-label="Discord" class="social-btn"><i class="fab fa-discord"></i></a>
+                    <a href="https://www.tiktok.com/@00bidev00" target="_blank" rel="noopener noreferrer"
+                        aria-label="TikTok" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                </div>
+
+                <div class="bottom-metrics">
+                    <div class="view-badge"><i class="fas fa-user-graduate"></i> BETU K23</div>
+                    <div class="view-badge"><i class="fas fa-wand-magic-sparkles"></i> Build mode</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Side: Scrollable Content Areas -->
+        <main class="content-wrapper">
+
+            <!-- About Section -->
+            <section id="about" class="section fade-up delay-1 collapsible-section">
+                <div class="section-header">
+                    <span class="section-badge">01 // INIT</span>
+                    <h2 class="section-title" data-vi="Về Bản Thân" data-en="About Me">Về Bản Thân</h2>
+                </div>
+
+                <div class="glass-card panel-content">
+                    <p class="lead-text"
+                        data-vi="Mình là <strong>Meow Ngáo</strong>, sinh viên IT chuyên ngành E-Commerce và đang học cách biến ý tưởng thành sản phẩm có ích."
+                        data-en="I'm <strong>Meow Ngao</strong>, an IT student majoring in E-Commerce and learning how to turn ideas into useful products.">
+                        Mình là <strong>Meow Ngáo</strong>, sinh viên IT chuyên ngành E-Commerce và đang học cách biến
+                        ý tưởng thành sản phẩm có ích.
+                    </p>
+                    <p class="sub-text"
+                        data-vi="Mình thích tìm hiểu cách business vận hành rồi nối nó với tư duy hệ thống khi làm phần mềm. Hướng đi hiện tại của mình là xây các web product, mini game và công cụ hữu ích, đặc biệt là những dự án có thể giải quyết bài toán thực tế trong E-Commerce.<br><br>Mình cũng đang tận dụng AI để tăng tốc quá trình triển khai, nhưng vẫn đặt trọng tâm vào product thinking, planning và khả năng hiểu rõ vì sao một hệ thống cần tồn tại."
+                        data-en="I enjoy understanding how businesses work and connecting that with system thinking when building software. My current direction is building web products, mini games, and useful tools, especially projects that solve real-world problems in E-Commerce.<br><br>I also use AI to accelerate execution, while keeping product thinking, planning, and understanding why a system should exist at the center.">
+                        Mình thích tìm hiểu cách business vận hành rồi nối nó với tư duy hệ thống khi làm phần mềm.
+                        Hướng đi hiện tại của mình là xây các web product, mini game và công cụ hữu ích, đặc biệt là
+                        những dự án có thể giải quyết bài toán thực tế trong E-Commerce.
+                        <br><br>
+                        Mình cũng đang tận dụng AI để tăng tốc quá trình triển khai, nhưng vẫn đặt trọng tâm vào
+                        product thinking, planning và khả năng hiểu rõ vì sao một hệ thống cần tồn tại.
+                    </p>
+                </div>
+
+                <div class="glass-card code-panel mt-2 fade-up">
+                    <div class="code-header">
+                        <div class="window-controls">
+                            <span class="ctrl close"></span>
+                            <span class="ctrl min"></span>
+                            <span class="ctrl max"></span>
+                        </div>
+                        <span class="filename">info.yml</span>
+                    </div>
+                    <pre><code><span class="token key">entity:</span> Meow Ngáo
+<span class="token key">alias:</span> EmBeHocCode
+<span class="token key">location:</span> <span data-vi="TP.HCM, Việt Nam" data-en="Ho Chi Minh City, Vietnam">TP.HCM, Việt Nam</span>
+<span class="token key">major:</span> <span data-vi="CNTT - E-Commerce" data-en="IT - E-Commerce">CNTT - E-Commerce</span>
+<span class="token key">core_focus:</span>
+  <span class="token value">- Web Products</span>
+  <span class="token value">- E-Commerce Thinking</span>
+  <span class="token value">- AI-assisted Execution</span>
+<span class="token key">status:</span> <span class="token highlight">Learning by building_</span></code></pre>
+                </div>
+
+                <div class="glass-card panel-content mt-2 fade-up">
+                    <p class="lead-text"
+                        data-vi="Điều mình theo đuổi không phải chỉ là code chạy được, mà là sản phẩm có lý do để tồn tại."
+                        data-en="What I pursue is not just working code, but products that have a reason to exist.">
+                        Điều mình theo đuổi không phải chỉ là code chạy được, mà là sản phẩm có lý do để tồn tại.
+                    </p>
+                    <p class="sub-text"
+                        data-vi="Mình thích cách một ý tưởng nhỏ có thể đi từ ghi chú ban đầu, thành cấu trúc hệ thống, rồi thành sản phẩm thật có người dùng đọc, bấm, hoặc sử dụng được. Vì vậy mình ưu tiên hiểu bài toán trước, rồi mới chọn cách xây."
+                        data-en="I like how a small idea can move from an initial note to system structure and then into a real product people can read, click, or use. That is why I prefer understanding the problem first, then choosing how to build it.">
+                        Mình thích cách một ý tưởng nhỏ có thể đi từ ghi chú ban đầu, thành cấu trúc hệ thống, rồi thành
+                        sản phẩm thật có người dùng đọc, bấm, hoặc sử dụng được. Vì vậy mình ưu tiên hiểu bài toán
+                        trước,
+                        rồi mới chọn cách xây.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Services / Expertise Section -->
+            <section id="services" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">02 // EXPERTISE</span>
+                    <h2 class="section-title" data-vi="Chuyên Môn" data-en="Expertise">Chuyên Môn</h2>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card glass-card fade-up">
+                        <div class="service-icon"><i class="fas fa-store"></i></div>
+                        <h3>E-Commerce Mindset</h3>
+                        <p data-vi="Tư duy gắn sản phẩm số với vận hành kinh doanh, hành vi người dùng và giá trị thực tế thay vì chỉ làm cho có giao diện."
+                            data-en="A mindset that connects digital products with business operations, user behavior, and real value instead of building visuals only.">
+                            Tư duy gắn sản phẩm số với vận hành kinh doanh, hành vi người dùng và giá trị thực tế thay
+                            vì chỉ làm cho có giao diện.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-1">
+                        <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
+                        <h3>Web Product Building</h3>
+                        <p data-vi="Xây landing page, bio page và các web app nhỏ với định hướng rõ ràng về nội dung, bố cục và hành trình người dùng."
+                            data-en="Build landing pages, bio pages, and small web apps with clear direction for content, layout, and user flow.">
+                            Xây landing page, bio page và các web app nhỏ với định hướng rõ ràng về nội dung, bố cục
+                            và hành trình người dùng.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-2">
+                        <div class="service-icon"><i class="fas fa-brain"></i></div>
+                        <h3>AI-assisted Workflow</h3>
+                        <p data-vi="Tận dụng AI để tăng tốc research, triển khai và debug, nhưng vẫn giữ phần định hướng chiến lược và ra quyết định ở phía con người."
+                            data-en="Use AI to speed up research, implementation, and debugging while keeping strategic direction and decisions human-led.">
+                            Tận dụng AI để tăng tốc research, triển khai và debug, nhưng vẫn giữ phần định
+                            hướng chiến lược và ra quyết định ở phía con người.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-3">
+                        <div class="service-icon"><i class="fas fa-diagram-project"></i></div>
+                        <h3>Product Planning</h3>
+                        <p data-vi="Ưu tiên hiểu bài toán, xác định logic hệ thống và tìm cách nối business idea với phần mềm theo cách dễ triển khai hơn."
+                            data-en="Prioritize understanding the problem, defining system logic, and connecting business ideas with software in a more practical way.">
+                            Ưu tiên hiểu bài toán, xác định logic hệ thống và tìm cách nối business idea với
+                            phần mềm theo cách dễ triển khai hơn.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">03 // CAPABILITIES</span>
+                    <h2 class="section-title" data-vi="Kỹ Năng / Công Nghệ" data-en="Skills / Technologies">Kỹ Năng /
+                        Công Nghệ</h2>
+                </div>
+
+                <div class="skills-grid">
+                    <!-- Tech Stack Grid -->
+                    <div class="glass-card skill-box fade-up">
+                        <h3 class="skill-box-title" data-vi="<i class='fas fa-toolbox'></i> Bộ Công Cụ"
+                            data-en="<i class='fas fa-toolbox'></i> Tech Stack"><i class="fas fa-toolbox"></i> Bộ Công
+                            Cụ</h3>
+                        <div class="tech-icons">
+                            <div class="tech-item"><i class="fab fa-html5"></i><span>HTML</span></div>
+                            <div class="tech-item"><i class="fab fa-css3-alt"></i><span>CSS</span></div>
+                            <div class="tech-item"><i class="fab fa-js"></i><span>JavaScript</span></div>
+                            <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
+                            <div class="tech-item"><i class="fas fa-code"></i><span>TypeScript</span></div>
+                            <div class="tech-item"><i class="fas fa-layer-group"></i><span>Next.js</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Practice Levels -->
+                    <div class="glass-card skill-box fade-up delay-1">
+                        <h3 class="skill-box-title" data-vi="<i class='fas fa-chart-bar'></i> Mức Độ Thực Hành"
+                            data-en="<i class='fas fa-chart-bar'></i> Practice Levels"><i class="fas fa-chart-bar"></i> Mức
+                            Độ Thực Hành</h3>
+
+                        <div class="skill-bar-item">
+                            <div class="skill-label">
+                                <span data-vi="AI-assisted execution" data-en="AI-assisted execution">AI-assisted
+                                    execution</span>
+                                <span class="skill-level" data-vi="Đang nâng cấp" data-en="Upgrading">Đang nâng cấp</span>
+                            </div>
+                            <div class="skill-track" aria-hidden="true">
+                                <div class="skill-fill" data-progress="86"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="skill-label">
+                                <span data-vi="Product thinking & planning"
+                                    data-en="Product thinking & planning">Product thinking & planning</span>
+                                <span class="skill-level" data-vi="Đang áp dụng" data-en="Applying">Đang áp dụng</span>
+                            </div>
+                            <div class="skill-track" aria-hidden="true">
+                                <div class="skill-fill" data-progress="72"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="skill-label">
+                                <span data-vi="Frontend web building" data-en="Frontend web building">Frontend web
+                                    building</span>
+                                <span class="skill-level" data-vi="Có sản phẩm" data-en="Shipped products">Có sản phẩm</span>
+                            </div>
+                            <div class="skill-track" aria-hidden="true">
+                                <div class="skill-fill" data-progress="82"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-bar-item">
+                            <div class="skill-label">
+                                <span data-vi="Tư duy E-Commerce" data-en="E-Commerce mindset">Tư duy E-Commerce</span>
+                                <span class="skill-level" data-vi="Đang học" data-en="Learning">Đang học</span>
+                            </div>
+                            <div class="skill-track" aria-hidden="true">
+                                <div class="skill-fill" data-progress="48"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="focus" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">04 // CURRENT FOCUS</span>
+                    <h2 class="section-title" data-vi="Hiện tại mình đang tập trung" data-en="What I'm focusing on">Hiện
+                        tại mình đang tập trung</h2>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card glass-card fade-up">
+                        <div class="service-icon"><i class="fas fa-rocket"></i></div>
+                        <h3 data-vi="Project định hướng tốt nghiệp" data-en="Graduation-oriented projects">Project định
+                            hướng tốt nghiệp</h3>
+                        <p data-vi="Mình đang ưu tiên những project có thể nối giữa E-Commerce, tư duy sản phẩm và khả năng triển khai thực tế bằng web."
+                            data-en="I'm prioritizing projects that connect E-Commerce, product thinking, and practical execution through the web.">
+                            Mình đang ưu tiên những project có thể nối giữa E-Commerce, tư duy sản phẩm và khả năng
+                            triển khai thực tế bằng web.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-1">
+                        <div class="service-icon"><i class="fas fa-microchip"></i></div>
+                        <h3 data-vi="AI business tools concept" data-en="AI business tools concept">AI business tools
+                            concept</h3>
+                        <p data-vi="Một hướng mình thích là công cụ AI hỗ trợ shop nhỏ đọc dữ liệu dễ hơn, nhìn tồn kho, lợi nhuận và xu hướng rõ hơn."
+                            data-en="One direction I like is AI tools that help small shops read data more clearly, especially inventory, profit, and trend signals.">
+                            Một hướng mình thích là công cụ AI hỗ trợ shop nhỏ đọc dữ liệu dễ hơn, nhìn tồn kho,
+                            lợi nhuận và xu hướng rõ hơn.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-2">
+                        <div class="service-icon"><i class="fas fa-clapperboard"></i></div>
+                        <h3 data-vi="Content workflow" data-en="Content workflow">Content workflow</h3>
+                        <p data-vi="Ngoài web, mình cũng thử sức với video TikTok theo hướng edit gọn, rõ nhịp và có hook tốt để luyện storytelling ngắn."
+                            data-en="Besides web, I also practice TikTok-style editing with a concise pace, clearer hooks, and short-form storytelling.">
+                            Ngoài web, mình cũng thử sức với video TikTok theo hướng edit gọn, rõ nhịp và có hook
+                            tốt để luyện storytelling ngắn.</p>
+                    </div>
+
+                    <div class="service-card glass-card fade-up delay-3">
+                        <div class="service-icon"><i class="fas fa-sitemap"></i></div>
+                        <h3 data-vi="System thinking" data-en="System thinking">System thinking</h3>
+                        <p data-vi="Mình đang luyện cách nhìn sản phẩm theo flow tổng thể: user cần gì, hệ thống xử lý ra sao, và phần nào thực sự tạo giá trị."
+                            data-en="I'm practicing how to see products as complete flows: what users need, how the system responds, and which parts actually create value.">
+                            Mình đang luyện cách nhìn sản phẩm theo flow tổng thể: user cần gì, hệ thống xử lý ra
+                            sao, và phần nào thực sự tạo giá trị.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Lab Section -->
+            <section id="security-lab" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">05 // SECURITY LAB</span>
+                    <h2 class="section-title" data-vi="Security Lab" data-en="Security Lab">Security Lab</h2>
+                </div>
+
+                <div class="security-lab-intro glass-card fade-up">
+                    <div class="security-lab-copy">
+                        <div class="security-lab-kicker" data-vi="Client-side simulation" data-en="Client-side simulation">Client-side simulation</div>
+                        <h3 data-vi="Mô phỏng kiến trúc bảo vệ server" data-en="Server defense architecture simulation">Mô phỏng kiến trúc bảo vệ server</h3>
+                        <p data-vi="Một lab trực quan để giải thích luồng client, traffic bất thường và các lớp phòng thủ Anti-DDoS theo mô hình OSI. Phần này chạy hoàn toàn trong trình duyệt và không gửi request thật."
+                            data-en="A visual lab explaining client flows, abnormal traffic, and Anti-DDoS defense layers by OSI model. It runs entirely in the browser and sends no real requests.">
+                            Một lab trực quan để giải thích luồng client, traffic bất thường và các lớp phòng thủ Anti-DDoS theo mô hình OSI. Phần này chạy hoàn toàn trong trình duyệt và không gửi request thật.
+                        </p>
+                    </div>
+                    <div class="security-lab-tags" aria-label="Security lab tags">
+                        <span>Canvas</span>
+                        <span>OSI Model</span>
+                        <span>Anti-DDoS</span>
+                        <span>Portfolio Safe</span>
+                    </div>
+                </div>
+
+                <div class="security-lab-frame glass-card fade-up delay-1">
+                    <iframe class="security-lab-iframe" src="./assets/security-lab/index.html?v=mobile-polish2" title="Security Lab Simulation" loading="lazy"></iframe>
+                </div>
+            </section>
+
+            <!-- Experience / Network Section -->
+            <section id="experience" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">06 // FEATURED</span>
+                    <h2 class="section-title" data-vi="Dự Án Đang Làm" data-en="Current Projects">Dự Án Đang Làm</h2>
+                </div>
+
+                <div class="project-list">
+                    <div class="project-item glass-card hover-glow fade-up">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=MB&background=0A101C&color=FF5FB7&size=64"
+                                alt="mieow-bio Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">mieow-bio</h3>
+                                    <span class="role-badge">PORTFOLIO</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Portfolio cá nhân theo style cyber pink/purple glassmorphism, dùng để trình bày profile, định hướng E-Commerce và các project học bằng việc tự build."
+                                    data-en="A personal portfolio with a cyber pink/purple glassmorphism style, used to present my profile, E-Commerce direction, and learning-by-building projects.">
+                                    Portfolio cá nhân theo style cyber pink/purple glassmorphism, dùng để trình bày profile, định hướng E-Commerce và các project học bằng việc tự build.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Frontend / Content</span>
+                                    <span><strong>Stack</strong> React, Vite, TypeScript</span>
+                                    <span><strong>Status</strong> Deployed, improving UX</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode/mieow-bio" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub</span></a>
+                                    <a href="https://bio.mieowparadise.io.vn/" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fas fa-up-right-from-square"></i><span>Demo</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-1">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=ST&background=0A101C&color=FF5FB7&size=64"
+                                alt="SnapTrans Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">SnapTrans</h3>
+                                    <span class="role-badge warn">DESKTOP TOOL</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Công cụ dịch desktop nhẹ cho Windows, hỗ trợ OCR từ ảnh chụp màn hình và dịch offline để phục vụ workflow học tập/làm việc."
+                                    data-en="A lightweight Windows desktop translation tool with screenshot OCR and offline translation for study/work workflows.">
+                                    Công cụ dịch desktop nhẹ cho Windows, hỗ trợ OCR từ ảnh chụp màn hình và dịch offline để phục vụ workflow học tập/làm việc.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Builder / UI flow</span>
+                                    <span><strong>Stack</strong> Python, OCR, desktop GUI</span>
+                                    <span><strong>Status</strong> Public repo, local demo</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode/SnapTrans" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub</span></a>
+                                    <span class="project-action-link is-disabled"><i class="fas fa-laptop"></i><span>Local demo</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-2">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=ZD&background=0A101C&color=FF5FB7&size=64"
+                                alt="ZenoDigital Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">ZenoDigital</h3>
+                                    <span class="role-badge">PHP MVC</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Storefront dịch vụ số và dashboard backoffice theo hướng commerce system: quản trị sản phẩm, vận hành đơn và thử nghiệm hỗ trợ AI."
+                                    data-en="A digital-services storefront and backoffice dashboard modeled as a commerce system: product admin, order operations, and AI-assistance experiments.">
+                                    Storefront dịch vụ số và dashboard backoffice theo hướng commerce system: quản trị sản phẩm, vận hành đơn và thử nghiệm hỗ trợ AI.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Full-stack learner</span>
+                                    <span><strong>Stack</strong> PHP MVC, MySQL, JS</span>
+                                    <span><strong>Status</strong> Building core flows</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode/ZenoDigital" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub</span></a>
+                                    <span class="project-action-link is-disabled"><i class="fas fa-screwdriver-wrench"></i><span>Demo soon</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-3">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=MIQ&background=0A101C&color=FF5FB7&size=64"
+                                alt="Mona Idle Quest Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">Mona Idle Quest</h3>
+                                    <span class="role-badge warn">PYGAME RPG</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Prototype game 2D pixel-art action RPG/idle RPG đang phát triển cho Windows, tập trung vào cảm giác điều khiển nhân vật, animation theo frame, combat đọc được và boss encounter để đưa vào portfolio/game demo."
+                                    data-en="A 2D pixel-art action RPG/idle RPG prototype for Windows, focused on responsive control, frame-based animation, readable combat, and a boss encounter for portfolio/game demo use.">
+                                    Prototype game 2D pixel-art action RPG/idle RPG đang phát triển cho Windows, tập trung vào cảm giác điều khiển nhân vật, animation theo frame, combat đọc được và boss encounter để đưa vào portfolio/game demo.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Solo developer / gameplay tuning</span>
+                                    <span><strong>Stack</strong> Python, Pygame, Tiled JSON</span>
+                                    <span><strong>Status</strong> Active prototype, preparing Windows build</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode/MonaIdleQuest" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub</span></a>
+                                    <span class="project-action-link is-disabled"><i class="fas fa-gamepad"></i><span>Playable build soon</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-3">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=EC&background=0A101C&color=8B5CF6&size=64"
+                                alt="E-Commerce Workflow Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">E-Commerce Workflow Notes</h3>
+                                    <span class="role-badge alert">RESEARCH</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Bộ ghi chú/khung phân tích về hành trình mua hàng, quản trị nội dung và cách biến insight shop nhỏ thành yêu cầu phần mềm rõ ràng."
+                                    data-en="A note/research system for purchase journeys, content operations, and turning small-shop insights into clearer software requirements.">
+                                    Bộ ghi chú/khung phân tích về hành trình mua hàng, quản trị nội dung và cách biến insight shop nhỏ thành yêu cầu phần mềm rõ ràng.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Product research</span>
+                                    <span><strong>Stack</strong> Docs, flow mapping, AI prompts</span>
+                                    <span><strong>Status</strong> Expanding for capstone</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub hub</span></a>
+                                    <span class="project-action-link is-disabled"><i class="fas fa-file-lines"></i><span>Case study</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up">
+                        <div class="project-main-flex">
+                            <img src="https://ui-avatars.com/api/?name=MAC&background=0A101C&color=8B5CF6&size=64"
+                                alt="Meow Astral Core Logo" class="project-logo" loading="lazy" decoding="async">
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">Meow Astral Core</h3>
+                                    <span class="role-badge">WEBGL</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Cảnh nền WebGL/Three.js điện ảnh cho portfolio, có lõi năng lượng tím, particle field và tương tác theo chuột nhưng đã giảm tải trên mobile."
+                                    data-en="A cinematic WebGL/Three.js background scene for the portfolio, with a purple energy core, particle field, and pointer interaction tuned down on mobile.">
+                                    Cảnh nền WebGL/Three.js điện ảnh cho portfolio, có lõi năng lượng tím, particle field và tương tác theo chuột nhưng đã giảm tải trên mobile.</p>
+                                <div class="project-meta-grid" aria-label="Project details">
+                                    <span><strong>Role</strong> Creative frontend</span>
+                                    <span><strong>Stack</strong> Three.js, WebGL, Vite</span>
+                                    <span><strong>Status</strong> Integrated background</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="https://github.com/EmBeHocCode/Meow-Astral-Core" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fab fa-github"></i><span>GitHub</span></a>
+                                    <a href="./assets/site3d-bg/index.html" target="_blank" rel="noopener noreferrer" class="project-action-link"><i class="fas fa-up-right-from-square"></i><span>Demo</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="connect" class="section collapsible-section is-collapsed">
+                <div class="section-header fade-up">
+                    <span class="section-badge">07 // CONNECT</span>
+                    <h2 class="section-title" data-vi="Kết nối nhanh" data-en="Quick connect">Kết nối nhanh</h2>
+                </div>
+
+                <div class="project-list">
+                    <div class="project-item glass-card hover-glow fade-up">
+                        <div class="project-main-flex">
+                            <div class="project-logo" style="display:grid;place-items:center;">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">GitHub</h3>
+                                    <span class="role-badge">CODE</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Nơi mình để source code, project public và quá trình học bằng việc tự build."
+                                    data-en="Where I keep source code, public projects, and my learning-by-building journey.">
+                                    Nơi mình để source code, project public và quá trình học bằng việc tự build.</p>
+                                <a href="https://github.com/EmBeHocCode" target="_blank" rel="noopener noreferrer"
+                                    class="ip-copy-container">
+                                    <span class="ip-text">github.com/EmBeHocCode</span>
+                                    <i class="fas fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-1">
+                        <div class="project-main-flex">
+                            <div class="project-logo" style="display:grid;place-items:center;">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">Website</h3>
+                                    <span class="role-badge">PROFILE</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Trang bio cá nhân để gom profile, liên kết và thử nghiệm cách mình trình bày bản thân trên web."
+                                    data-en="A personal bio site where I gather my profile, links, and how I present myself on the web.">
+                                    Trang bio cá nhân để gom profile, liên kết và thử nghiệm cách mình trình bày bản
+                                    thân trên web.</p>
+                                <a href="https://bio.mieowparadise.io.vn/" target="_blank" rel="noopener noreferrer"
+                                    class="ip-copy-container">
+                                    <span class="ip-text">bio.mieowparadise.io.vn</span>
+                                    <i class="fas fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-2">
+                        <div class="project-main-flex">
+                            <div class="project-logo" style="display:grid;place-items:center;">
+                                <i class="fab fa-discord"></i>
+                            </div>
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">Discord</h3>
+                                    <span class="role-badge warn">CHAT</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Nếu cần trao đổi nhanh hơn về project, mình thường phản hồi qua Discord tiện và gọn hơn."
+                                    data-en="If you need quicker communication for a project, Discord is usually the fastest and simplest way to reach me.">
+                                    Nếu cần trao đổi nhanh hơn về project, mình thường phản hồi qua Discord tiện và gọn
+                                    hơn.</p>
+                                <a href="https://discord.com/users/embi_dev" target="_blank" rel="noopener noreferrer"
+                                    class="ip-copy-container">
+                                    <span class="ip-text">discord.com/users/embi_dev</span>
+                                    <i class="fas fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-item glass-card hover-glow fade-up delay-3">
+                        <div class="project-main-flex">
+                            <div class="project-logo" style="display:grid;place-items:center;">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <div class="project-content">
+                                <div class="project-title-row">
+                                    <h3 class="project-title">TikTok</h3>
+                                    <span class="role-badge alert">CONTENT</span>
+                                </div>
+                                <p class="project-desc"
+                                    data-vi="Nơi mình thử nghiệm video ngắn, nhịp edit và cách truyền tải nội dung theo kiểu ngắn gọn hơn."
+                                    data-en="A place where I experiment with short videos, editing pace, and more compact content delivery.">
+                                    Nơi mình thử nghiệm video ngắn, nhịp edit và cách truyền tải nội dung theo kiểu ngắn
+                                    gọn hơn.</p>
+                                <a href="https://www.tiktok.com/@00bidev00" target="_blank" rel="noopener noreferrer"
+                                    class="ip-copy-container">
+                                    <span class="ip-text">tiktok.com/@00bidev00</span>
+                                    <i class="fas fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="main-footer fade-up delay-2">
+                <div class="footer-content glass-card">
+                    <div class="footer-brand">Meow Ngáo // 2026</div>
+                    <div class="footer-msg" data-vi="Building useful things, one project at a time."
+                        data-en="Building useful things, one project at a time.">Building useful things, one project at
+                        a time.</div>
+                    <div class="footer-msg"
+                        data-vi='"Code là thứ, thiết kế là nghệ thuật, còn sản phẩm tốt là thứ khiến người ta muốn quay lại."'
+                        data-en='"Code is one thing, design is an art, and a good product is what makes people come back."'>
+                        "Code là thứ, thiết kế là nghệ thuật, còn sản phẩm tốt là thứ khiến người ta muốn quay lại."
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Background Music Audio Tag -->
+    <audio id="bg-music" preload="auto" autoplay playsinline></audio>
+
+    <!-- Floating Music Toggle Button -->
+    <button id="music-toggle-btn" class="floating-music-btn" data-vi-title="Mở/Đóng Bảng Nhạc"
+        data-en-title="Toggle Music Panel" title="Mở/Đóng Bảng Nhạc">
+        <i class="fas fa-music"></i>
+    </button>
+
+    <!-- Music Panel (Now decoupled from the button) -->
+    <div class="music-content" id="music-content">
+        <div class="music-panel-header">
+            <div class="music-cover" id="music-cover">
+                <i class="fas fa-compact-disc"></i>
+            </div>
+            <div class="music-info">
+                <div class="music-kicker">Music Controller</div>
+                <div class="music-title" id="music-title">Đang tải playlist...</div>
+                <div class="music-subtitle" id="music-subtitle">Đang chuẩn bị playlist local từ assets/music</div>
+            </div>
+        </div>
+
+        <div class="music-progress-block">
+            <input type="range" id="music-progress" min="0" max="100" step="0.1" value="0" title="Tua bài hát"
+                aria-label="Tua bài hát">
+            <div class="music-time-row">
+                <span id="music-current-time">00:00</span>
+                <span id="music-duration">00:00</span>
+            </div>
+        </div>
+
+        <div class="music-controls">
+            <button id="music-prev" class="ctrl-btn ctrl-btn-wide" type="button" title="Bài trước"
+                aria-label="Bài trước"><i class="fas fa-backward-step"></i></button>
+            <button id="music-play-pause" class="ctrl-btn ctrl-btn-main" type="button" title="Phát/Tạm dừng"
+                aria-label="Phát hoặc tạm dừng nhạc"><i class="fas fa-play"></i></button>
+            <button id="music-next" class="ctrl-btn ctrl-btn-wide" type="button" title="Bài tiếp theo"
+                aria-label="Bài tiếp theo"><i class="fas fa-forward-step"></i></button>
+            <button id="music-shuffle" class="ctrl-btn ctrl-btn-wide" type="button" title="Phát ngẫu nhiên"
+                aria-label="Phát ngẫu nhiên"><i class="fas fa-shuffle"></i></button>
+            <button id="music-loop" class="ctrl-btn ctrl-btn-wide" type="button" title="Chế độ lặp"
+                aria-label="Chế độ lặp"><i class="fas fa-repeat"></i></button>
+        </div>
+
+        <div class="music-settings">
+            <label class="music-setting" for="music-volume">
+                <div class="music-setting-head">
+                    <span>Volume Boost</span>
+                    <strong id="music-volume-value">100%</strong>
+                </div>
+                <input type="range" id="music-volume" min="0" max="2" step="0.01" value="1" title="Âm lượng x200"
+                    aria-label="Điều chỉnh âm lượng x200">
+            </label>
+
+            <label class="music-setting" for="music-speed">
+                <div class="music-setting-head">
+                    <span>Playback Speed</span>
+                    <strong id="music-speed-value">1.00x</strong>
+                </div>
+                <input type="range" id="music-speed" min="0.5" max="2" step="0.05" value="1" title="Tốc độ phát"
+                    aria-label="Điều chỉnh tốc độ phát">
+            </label>
+        </div>
+
+        <div class="music-playlist">
+            <div class="music-playlist-head">
+                <span>Playlist</span>
+                <strong id="music-track-count">0 tracks</strong>
+            </div>
+            <div id="music-track-list" class="music-track-list"></div>
+        </div>
+    </div>
+
+    <!-- Back To Top -->
+    <button id="back-to-top" class="back-to-top-btn" type="button" data-vi-title="Lên đầu trang"
+        data-en-title="Back to top" title="Lên đầu trang" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Floating View Counter -->
+    <div class="floating-view-badge" data-vi-title="Lượt mở trên trình duyệt này" data-en-title="Views on this browser"
+        title="Lượt mở trên trình duyệt này">
+        <i class="fas fa-eye"></i>
+        <span id="view-count">...</span>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast" data-vi="Đã Copy IP!" data-en="IP Copied!">Đã Copy IP!</div>
+
+    <script src="./js/script.js?v=mobile-polish2"></script>
+
+    <!-- Forward pointer events to the non-interactive 3D background iframe -->
+    <script>
+        (function () {
+            var frame = document.getElementById('site3d-bg-frame');
+            if (!frame) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            if (navigator.connection && navigator.connection.saveData) return;
+
+            function isSite3DBackgroundActive() {
+                return Boolean(frame.getAttribute('src')) && !document.body.classList.contains('static-bg-mode');
+            }
+
+            var pendingEvent = {
+                eventType: 'pointermove',
+                nx: 0.5,
+                ny: 0.5,
+                button: -1,
+                buttons: 0
+            };
+            var rafPending = false;
+            var lastSent = 0;
+            var THROTTLE_MS = 32; // ~30fps max for background
+
+            function dispatchPointerToFrame(payload) {
+                if (!isSite3DBackgroundActive() || !frame.contentWindow || !frame.contentDocument) return false;
+                var doc = frame.contentDocument;
+                var rect = frame.getBoundingClientRect();
+                var clientX = payload.nx * Math.max(1, rect.width);
+                var clientY = payload.ny * Math.max(1, rect.height);
+                var target = doc.elementFromPoint(clientX, clientY) || doc.body || doc.documentElement;
+                if (!target) return false;
+                var mouseType = {
+                    pointerdown: 'mousedown',
+                    pointermove: 'mousemove',
+                    pointerup: 'mouseup',
+                    pointerleave: 'mouseleave'
+                }[payload.eventType];
+
+                try {
+                    target.dispatchEvent(new PointerEvent(payload.eventType, {
+                        bubbles: true,
+                        cancelable: true,
+                        composed: true,
+                        clientX: clientX,
+                        clientY: clientY,
+                        screenX: payload.screenX || clientX,
+                        screenY: payload.screenY || clientY,
+                        button: payload.button,
+                        buttons: payload.buttons,
+                        pointerId: payload.pointerId || 1,
+                        pointerType: payload.pointerType || 'mouse',
+                        isPrimary: payload.isPrimary !== false,
+                        altKey: payload.altKey,
+                        ctrlKey: payload.ctrlKey,
+                        metaKey: payload.metaKey,
+                        shiftKey: payload.shiftKey
+                    }));
+                    if (mouseType) {
+                        target.dispatchEvent(new MouseEvent(mouseType, {
+                            bubbles: true,
+                            cancelable: true,
+                            composed: true,
+                            clientX: clientX,
+                            clientY: clientY,
+                            screenX: payload.screenX || clientX,
+                            screenY: payload.screenY || clientY,
+                            button: payload.button,
+                            buttons: payload.buttons,
+                            altKey: payload.altKey,
+                            ctrlKey: payload.ctrlKey,
+                            metaKey: payload.metaKey,
+                            shiftKey: payload.shiftKey
+                        }));
+                    }
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function dispatchWheelToFrame(deltaY, sourceEvent) {
+                if (!isSite3DBackgroundActive() || !frame.contentWindow || !frame.contentDocument) return false;
+                var doc = frame.contentDocument;
+                var rect = frame.getBoundingClientRect();
+                var clientX = sourceEvent && typeof sourceEvent.clientX === 'number' ? sourceEvent.clientX - rect.left : rect.width / 2;
+                var clientY = sourceEvent && typeof sourceEvent.clientY === 'number' ? sourceEvent.clientY - rect.top : rect.height / 2;
+                clientX = Math.min(Math.max(clientX, 0), Math.max(1, rect.width));
+                clientY = Math.min(Math.max(clientY, 0), Math.max(1, rect.height));
+                var target = doc.elementFromPoint(clientX, clientY) || doc.body || doc.documentElement;
+                if (!target) return false;
+
+                try {
+                    target.dispatchEvent(new WheelEvent('wheel', {
+                        bubbles: true,
+                        cancelable: true,
+                        composed: true,
+                        clientX: clientX,
+                        clientY: clientY,
+                        deltaY: deltaY,
+                        deltaX: 0,
+                        deltaMode: 0,
+                        altKey: Boolean(sourceEvent && sourceEvent.altKey),
+                        ctrlKey: false,
+                        metaKey: false,
+                        shiftKey: Boolean(sourceEvent && sourceEvent.shiftKey)
+                    }));
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            window.dispatchSite3DWheel = function (deltaY) {
+                if (!isSite3DBackgroundActive()) return false;
+                return dispatchWheelToFrame(deltaY || 0, null);
+            };
+
+            function postToFrame(payload) {
+                if (dispatchPointerToFrame(payload)) return;
+                if (!isSite3DBackgroundActive() || !frame.contentWindow) return;
+                try {
+                    frame.contentWindow.postMessage(payload, '*');
+                } catch (e) { }
+            }
+
+            function sendMoveToFrame(now) {
+                rafPending = false;
+                if (now - lastSent < THROTTLE_MS) return;
+                lastSent = now;
+                postToFrame(Object.assign({ type: 'parent-pointer' }, pendingEvent));
+            }
+
+            function normalizeEvent(e, eventType) {
+                return {
+                    type: 'parent-pointer',
+                    eventType: eventType,
+                    nx: Math.min(1, Math.max(0, e.clientX / window.innerWidth)),
+                    ny: Math.min(1, Math.max(0, e.clientY / window.innerHeight)),
+                    button: typeof e.button === 'number' ? e.button : -1,
+                    buttons: typeof e.buttons === 'number' ? e.buttons : 0,
+                    pointerId: e.pointerId || 1,
+                    pointerType: e.pointerType || 'mouse',
+                    isPrimary: e.isPrimary !== false,
+                    screenX: e.screenX,
+                    screenY: e.screenY,
+                    altKey: Boolean(e.altKey),
+                    ctrlKey: Boolean(e.ctrlKey),
+                    metaKey: Boolean(e.metaKey),
+                    shiftKey: Boolean(e.shiftKey)
+                };
+            }
+
+            document.addEventListener('pointermove', function (e) {
+                if (!isSite3DBackgroundActive()) return;
+                pendingEvent = normalizeEvent(e, 'pointermove');
+                if (!rafPending) {
+                    rafPending = true;
+                    requestAnimationFrame(sendMoveToFrame);
+                }
+            }, { passive: true });
+
+            document.addEventListener('pointerdown', function (e) {
+                postToFrame(normalizeEvent(e, 'pointerdown'));
+            }, { passive: true, capture: true });
+
+            document.addEventListener('pointerup', function (e) {
+                postToFrame(normalizeEvent(e, 'pointerup'));
+            }, { passive: true, capture: true });
+
+            document.addEventListener('pointerleave', function (e) {
+                postToFrame(normalizeEvent(e, 'pointerleave'));
+            }, { passive: true });
+
+            document.addEventListener('wheel', function (e) {
+                if (e.ctrlKey || e.metaKey || !document.body.classList.contains('ui-hidden')) return;
+                if (dispatchWheelToFrame(e.deltaY, e)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, { passive: false, capture: true });
+        })();
+    </script>
+
+    <!-- Zoom Lock -->
+    <script>
+        (function () {
+            function isZoomShortcut(event) {
+                if (!event.ctrlKey && !event.metaKey) return false;
+                var key = String(event.key || '').toLowerCase();
+                var code = event.keyCode || event.which;
+                return (
+                    key === '+' ||
+                    key === '-' ||
+                    key === '=' ||
+                    key === '_' ||
+                    key === '0' ||
+                    code === 61 ||
+                    code === 107 ||
+                    code === 187 ||
+                    code === 173 ||
+                    code === 109 ||
+                    code === 189 ||
+                    code === 48 ||
+                    code === 96
+                );
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (!isZoomShortcut(event)) return;
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }, { capture: true });
+
+            document.addEventListener('wheel', function (event) {
+                if (!event.ctrlKey && !event.metaKey) return;
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }, { passive: false, capture: true });
+
+            ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (eventName) {
+                document.addEventListener(eventName, function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                }, { passive: false, capture: true });
+            });
+        })();
+    </script>
+
+    <!-- Anti Inspect -->
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, { capture: true });
+
+        document.onkeydown = function (e) {
+            // Chặn phím F12 (phím tắt huyền thoại để mở DevTools)
+            if (e.keyCode == 123) {
+                return false;
+            }
+
+            // Chặn Ctrl+Shift+I: Một cách khác để mở bảng Inspect
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                return false;
+            }
+
+            // Chặn Ctrl+Shift+J: Mở thẳng tab Console
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                return false;
+            }
+
+            // Chặn Ctrl+Shift+C: Chế độ chọn phần tử để soi (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 67) {
+                return false;
+            }
+
+            // Chặn Ctrl+U: Xem mã nguồn thô của trang (View Source)
+            if (e.ctrlKey && e.keyCode == 85) {
+                return false;
+            }
+        };
+    </script>
+
+</body>
+
+</html>

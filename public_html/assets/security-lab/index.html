@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Lab Simulation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./security-lab.css?v=mobile-polish2">
+</head>
+<body>
+  <section id="socket-demo" class="security-lab-shell">
+    <div class="section-header">
+      <span class="lab-kicker">CLIENT-SIDE DEMO</span>
+      <h2>Mô Phỏng <span>Kiến Trúc Bảo Vệ Server</span></h2>
+      <p>Trực quan hóa client, traffic bất thường và các lớp phòng thủ Anti-DDoS theo mô hình OSI. Demo chạy trong trình duyệt, không gửi request thật.</p>
+    </div>
+
+    <div class="server-viz">
+      <div class="server-viz__canvas-wrap">
+        <canvas id="socketCanvas" aria-label="Client-side security visualization"></canvas>
+
+        <div class="server-viz__hud server-viz__hud--tl">
+          <div class="hud-title"><i class="fas fa-server"></i> Server Status: <span id="serverStatus" class="status-online">Online</span></div>
+          <div class="hud-row"><i class="fas fa-users"></i> Clients: <strong id="clientCount">0</strong></div>
+          <div class="hud-row"><i class="fas fa-skull-crossbones"></i> Threats: <strong id="attackerCount" style="color:#ef4444">0</strong></div>
+          <div class="hud-row"><i class="fas fa-exchange-alt"></i> Packets/s: <strong id="packetRate">0</strong></div>
+          <div class="hud-row"><i class="fas fa-shield-alt" style="color:#ef4444"></i> Blocked/s: <strong id="fwBlockedRate" style="color:#ef4444">0</strong></div>
+        </div>
+
+        <div class="server-viz__hud server-viz__hud--tr" id="serverLog">
+          <div class="sv-log-line sv-log-line--info">Waiting for events...</div>
+        </div>
+
+        <div class="server-viz__controls">
+          <button id="toggleFwBtn" class="sv-btn"><i class="fas fa-shield-alt"></i> Bật phòng thủ</button>
+          <button id="addAttackerBtn" class="sv-btn sv-btn--danger"><i class="fas fa-bug"></i> Mô phỏng traffic xấu</button>
+          <button id="addClientBtn" class="sv-btn sv-btn--cyan"><i class="fas fa-user-plus"></i> Thêm client</button>
+          <button id="removeClientBtn" class="sv-btn sv-btn--muted"><i class="fas fa-user-minus"></i> Bớt client</button>
+        </div>
+      </div>
+
+      <div class="server-viz__legend">
+        <div class="legend-card">
+          <div class="legend-card__title"><i class="fas fa-layer-group" style="color:#f43f5e"></i> Traffic bất thường theo OSI</div>
+          <div class="legend-card__items">
+            <span class="ltag" style="--c:#f43f5e">L7 HTTP Burst</span>
+            <span class="ltag" style="--c:#e11d48">L7 Slow Request</span>
+            <span class="ltag" style="--c:#f59e0b">L4 SYN Spike</span>
+            <span class="ltag" style="--c:#d97706">L4 UDP Spike</span>
+            <span class="ltag" style="--c:#ef4444">L3 ICMP Spike</span>
+            <span class="ltag" style="--c:#a855f7">L2 ARP Anomaly</span>
+          </div>
+        </div>
+        <div class="legend-card">
+          <div class="legend-card__title"><i class="fas fa-shield-alt" style="color:#10b981"></i> Hệ thống phòng thủ</div>
+          <div class="legend-card__items">
+            <span class="ltag" style="--c:#10b981">WAF (L7)</span>
+            <span class="ltag" style="--c:#06b6d4">Rate Limiter (L4)</span>
+            <span class="ltag" style="--c:#8b5cf6">IDS/IPS</span>
+            <span class="ltag" style="--c:#f59e0b">DDoS Shield</span>
+          </div>
+        </div>
+        <div class="legend-card">
+          <div class="legend-card__title"><i class="fas fa-circle-info" style="color:#06b6d4"></i> Chú thích</div>
+          <div class="legend-card__items">
+            <span class="ltag" style="--c:#0ea5e9">Normal Client</span>
+            <span class="ltag" style="--c:#ef4444">Threat Source</span>
+            <span class="ltag" style="--c:#10b981">Server Response</span>
+            <span class="ltag" style="--c:#ef4444">Malicious Packet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="./security-lab.js?v=perf2"></script>
+</body>
+</html>

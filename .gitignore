@@ -8,15 +8,6 @@ counter.json
 public_html/assets/chrome-check-profile/
 public_html/assets/chrome-project-check/
 
-# Hosting backups and duplicate exports
-public_html/assets/assets.zip
-public_html/music/
-public_html/**/*.old
-public_html/**/*-old.*
-public_html/**/*-old
-public_html/**/*_old
-public_html/**/*.1
-
 # OS/editor noise
 .DS_Store
 Thumbs.db

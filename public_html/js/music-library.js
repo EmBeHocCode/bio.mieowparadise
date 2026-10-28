@@ -1,6 +1,7 @@
 /* CẤU HÌNH NHẠC — chỉ cần sửa file này khi thêm bài hoặc playlist.
  * 1. Cho MP3 vào assets/music/<folder>/.
- * 2. Thêm đúng tên file vào tracks (có phân biệt chữ hoa/thường trên host).
+ * 2. Thêm { file: 'ten-file.mp3', title: 'Tên bài có dấu' } vào tracks.
+ *    Có thể chỉ ghi chuỗi tên file như playlist Drill; tên file phân biệt hoa/thường.
  * 3. Playlist mới: sao chép một mục bên dưới, đặt id riêng và tên folder.
  * Không cần sửa bộ điều khiển phát nhạc trong script.js.
  */
@@ -28,16 +29,16 @@ window.MEOW_MUSIC_LIBRARY = {
             name: 'Chill-music',
             folder: 'Chill-music',
             tracks: [
-                '01-timem.mp3',
-                '02-khongbuong.mp3',
-                '03-cohaytubaogio.mp3',
-                '04-nhinaibaiduong.mp3',
-                '05-gioihancuanoidau.mp3',
-                '06-doitranoianh.mp3',
-                '07-leluuly.mp3',
-                '08-thuongthithoi-chill.mp3',
-                '09-doiainaygiu.mp3',
-                '10-nguocloiyeu.mp3'
+                { file: '01-timem.mp3', title: 'Tìm em' },
+                { file: '02-khongbuong.mp3', title: 'Không Buông' },
+                { file: '03-cohaytubaogio.mp3', title: 'Có hay từ bao giờ 2' },
+                { file: '04-nhinaibaiduong.mp3', title: 'Nhìn ai bái đường' },
+                { file: '05-gioihancuanoidau.mp3', title: 'Giới hạn của nỗi đau-AI' },
+                { file: '06-doitranoianh.mp3', title: 'Dối trá nơi anh' },
+                { file: '07-leluuly.mp3', title: 'Lệ Lưu Ly' },
+                { file: '08-thuongthithoi-chill.mp3', title: 'Thương Thì Thôi' },
+                { file: '09-doiainaygiu.mp3', title: 'Đời này ai nấy giữ' },
+                { file: '10-nguocloiyeu.mp3', title: 'Ngược lối yêu' }
             ]
         },
         {

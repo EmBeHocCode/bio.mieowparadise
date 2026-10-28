@@ -7,7 +7,7 @@ File cấu hình: `../../js/music-library.js`.
 ```text
 assets/music/
   Drill-music/  → bài 01–07
-  Chill-music/  → bài 08–10
+  Chill-music/  → 10 bài đơn
   Remix-music/  → đang trống
 ```
 
@@ -16,6 +16,15 @@ assets/music/
 Cho file nhạc vào đúng thư mục rồi thêm tên file vào `tracks` của playlist
 trong `music-library.js`. Giữ đúng chữ hoa/thường và phần mở rộng. Không cần
 đánh lại số tên bài cũ. Tên file có dấu hoặc khoảng trắng vẫn được mã hóa URL.
+
+Tên hiển thị có dấu được khai báo riêng, không cần đổi tên MP3 hoặc LRC:
+
+```js
+{ file: '01-timem.mp3', title: 'Tìm em' }
+```
+
+Sửa `title` để đổi tên trên player và danh sách bài; giữ `file` khớp tên MP3.
+Kiểu cũ `'ten-bai.mp3'` vẫn dùng được, player sẽ tự tạo tên từ tên file.
 
 ## Thêm lời bài hát LRC
 

@@ -105,6 +105,8 @@ body:has(.music-player.active) .theme-manager-panel.active { z-index: 1008; }
     opacity: 0; pointer-events: none; z-index: 1;
 }
 .music-elastic:has(input:focus-visible) { outline: 2px solid var(--effect-text-color); outline-offset: 3px; border-radius: 8px; }
+/* Space controls playback; arrow keys restore the range's keyboard focus ring. */
+.music-player .music-elastic:has(input[data-space-shortcut="true"]) { outline: none; }
 @media (max-width: 768px) {
     .music-content.music-player { left: auto; right: 14px; width: min(640px, calc(100vw - 28px)); max-width: none; max-height: calc(100dvh - 7rem); }
 }

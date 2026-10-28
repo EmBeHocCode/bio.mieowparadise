@@ -1001,12 +1001,21 @@ function initMusicPlayer() {
         updatePlayState();
     };
 
+    const isMusicRange = target => target instanceof Element && target.matches('.music-player input[type="range"]');
     const isMusicShortcut = (event) => {
         if (event.code !== 'Space' && event.key !== ' ') return false;
-        if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return false;
+        if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return false;
         const target = event.target;
+        if (isMusicRange(target)) return true;
         return !(target instanceof Element && target.closest('input, textarea, select, button, a[href], summary, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="textbox"], [role="slider"], [role="combobox"], audio[controls], video[controls]'));
     };
+    [progressSlider, volumeSlider, speedSlider].filter(Boolean).forEach(input => {
+        // Keep the range focused for arrow-key edits; Space switches to playback.
+        input.addEventListener('keydown', event => {
+            if (event.code !== 'Space' && event.key !== ' ') input.removeAttribute('data-space-shortcut');
+        });
+        input.addEventListener('blur', () => input.removeAttribute('data-space-shortcut'));
+    });
 
     const bindAutoplayUnlock = () => {
         if (hasBoundAutoplayUnlock) return;
@@ -1355,12 +1364,17 @@ function initMusicPlayer() {
         library = (Array.isArray(config.playlists) ? config.playlists : []).flatMap(entry => {
             if (!entry || typeof entry.id !== 'string' || !/^[a-z0-9_-]+$/i.test(entry.id) || ids.has(entry.id) || typeof entry.folder !== 'string' || !entry.folder || /[\\/]/.test(entry.folder) || entry.folder === '..') return [];
             ids.add(entry.id);
-            const tracks = (Array.isArray(entry.tracks) ? entry.tracks : []).filter(file => typeof file === 'string' && file && !/[\\/]/.test(file)).map(file => ({
-                id: `${entry.id}:${file}`,
-                file,
-                title: humanizeTrackTitle(file),
-                url: `./assets/music/${encodeURIComponent(entry.folder)}/${encodeURIComponent(file)}`
-            }));
+            const tracks = (Array.isArray(entry.tracks) ? entry.tracks : []).flatMap(item => {
+                const file = typeof item === 'string' ? item : item?.file;
+                if (typeof file !== 'string' || !file || /[\\/]/.test(file)) return [];
+                const title = typeof item?.title === 'string' ? item.title.trim() : '';
+                return [{
+                    id: `${entry.id}:${file}`,
+                    file,
+                    title: title || humanizeTrackTitle(file),
+                    url: `./assets/music/${encodeURIComponent(entry.folder)}/${encodeURIComponent(file)}`
+                }];
+            });
             return [{ id: entry.id, name: entry.name || entry.id, tracks }];
         });
         const available = library.filter(entry => entry.tracks.length);
@@ -1427,6 +1441,8 @@ function initMusicPlayer() {
         }
         if (isMusicShortcut(e) && playlist.length && currentTrackIndex >= 0) {
             e.preventDefault();
+            if (isMusicRange(e.target)) e.target.setAttribute('data-space-shortcut', 'true');
+            if (e.repeat) return;
             if (audio.paused) playCurrent();
             else pauseCurrent();
         }

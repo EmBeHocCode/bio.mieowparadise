@@ -19,12 +19,14 @@ body.music-is-open { overflow: hidden; }
     border-radius: 24px;
     background: linear-gradient(145deg, #181818, #0b0b0b);
     border-color: var(--effect-soft-line);
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--effect-soft-line) transparent;
+    scrollbar-width: none;
     transition: opacity .25s, transform .35s cubic-bezier(.16, 1, .3, 1);
 }
+/* Keep wheel/touch scrolling without a second rail beside the track list. */
+.music-content.music-player::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .music-player-top { display: grid; grid-template-columns: 164px minmax(0, 1fr); gap: 24px; align-items: center; }
 /* The color picker must remain usable when both floating panels are open. */
 body:has(.music-player.active) .theme-manager-panel.active { z-index: 1008; }

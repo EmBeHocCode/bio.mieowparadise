@@ -41,137 +41,73 @@ function shouldPlayPageLoadIntro() {
 
 function initPageLoadIntro() {
     const intro = document.getElementById('bio-load-intro');
-    const atmosphere = intro ? intro.querySelector('.bio-load-atmosphere') : null;
-    const traces = document.getElementById('bio-load-traces');
-    const shards = document.getElementById('bio-load-shards');
-    const statusText = document.getElementById('bio-load-status');
-    const subStatusText = document.getElementById('bio-load-substatus');
-    const percentText = document.getElementById('bio-load-percent');
-    const progressFill = document.getElementById('bio-load-progress-fill');
-    const progressTrack = intro ? intro.querySelector('.bio-load-progress-track') : null;
+    const video = document.getElementById('bio-intro-video');
+    const skip = document.getElementById('bio-intro-skip');
     if (!intro) return;
-
-    if (isMobilePerformanceMode()) {
-        document.body.classList.remove('bio-intro-active');
+    if (!shouldPlayPageLoadIntro() || !video || !skip) {
         intro.remove();
         return;
     }
 
-    if (!shouldPlayPageLoadIntro()) {
-        intro.remove();
-        return;
-    }
-
-    if (traces) {
-        const traceCount = 14;
-        for (let i = 0; i < traceCount; i += 1) {
-            const trace = document.createElement('span');
-            trace.className = 'bio-load-trace';
-            trace.style.setProperty('--x', `${8 + Math.random() * 84}%`);
-            trace.style.setProperty('--y', `${12 + Math.random() * 76}%`);
-            trace.style.setProperty('--w', `${24 + Math.random() * 90}px`);
-            trace.style.setProperty('--rot', `${-34 + Math.random() * 68}deg`);
-            trace.style.setProperty('--dur', `${2.2 + Math.random() * 2.6}s`);
-            trace.style.setProperty('--delay', `${-Math.random() * 3.2}s`);
-            traces.appendChild(trace);
-        }
-    }
-
-    if (shards) {
-        const shardCount = 10;
-        for (let i = 0; i < shardCount; i += 1) {
-            const shard = document.createElement('i');
-            shard.className = 'bio-load-shard';
-            shard.style.setProperty('--x', `${14 + Math.random() * 72}%`);
-            shard.style.setProperty('--y', `${14 + Math.random() * 72}%`);
-            shard.style.setProperty('--len', `${12 + Math.random() * 24}px`);
-            shard.style.setProperty('--rot', `${-58 + Math.random() * 116}deg`);
-            shard.style.setProperty('--dur', `${3.8 + Math.random() * 3.2}s`);
-            shard.style.setProperty('--delay', `${-Math.random() * 3.6}s`);
-            shards.appendChild(shard);
-        }
-    }
-
-    const statusSteps = [
-        { at: 0, title: 'INITIALIZING', detail: 'Preparing core modules' },
-        { at: 0.24, title: 'LOADING PROFILE', detail: 'Calibrating identity layer' },
-        { at: 0.56, title: 'SYNCING INTERFACE', detail: 'Aligning visual systems' },
-        { at: 0.84, title: 'SYSTEM READY', detail: 'Entering Meow ecosystem' },
-    ];
-
-    const pointer = { x: 0, y: 0 };
-    const drift = { x: 0, y: 0 };
-    let rafId = 0;
-    let startTime = 0;
-    let hasExitStarted = false;
-    let activeStatusIndex = -1;
-    let activePercent = -1;
-    const introDuration = isCoarseOrSmallScreen() ? 1200 : 1900;
-
-    const easeOutQuart = (value) => 1 - Math.pow(1 - value, 4);
-
-    const onPointerMove = (event) => {
-        pointer.x = (event.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;
-        pointer.y = (event.clientY / Math.max(1, window.innerHeight) - 0.5) * 2;
-    };
-
-    const tick = (time) => {
-        if (!startTime) startTime = time;
-        const elapsed = Math.min(introDuration, time - startTime);
-        const rawProgress = Math.min(1, elapsed / introDuration);
-        const easedProgress = easeOutQuart(rawProgress);
-
-        let statusIndex = 0;
-        for (let i = 0; i < statusSteps.length; i += 1) {
-            if (rawProgress >= statusSteps[i].at) statusIndex = i;
-        }
-        if (statusIndex !== activeStatusIndex) {
-            activeStatusIndex = statusIndex;
-            if (statusText) statusText.textContent = statusSteps[statusIndex].title;
-            if (subStatusText) subStatusText.textContent = statusSteps[statusIndex].detail;
-        }
-
-        const percent = Math.round(easedProgress * 100);
-        if (percent !== activePercent) {
-            activePercent = percent;
-            if (percentText) percentText.textContent = `${percent}%`;
-            if (progressTrack) progressTrack.setAttribute('aria-valuenow', String(percent));
-        }
-        if (progressFill) {
-            progressFill.style.transform = `scaleX(${easedProgress.toFixed(4)})`;
-        }
-
-        drift.x += (pointer.x - drift.x) * 0.06;
-        drift.y += (pointer.y - drift.y) * 0.06;
-        if (atmosphere) {
-            const waveX = Math.sin(time * 0.00032) * 3.8;
-            const waveY = Math.cos(time * 0.00027) * 3.2;
-            const px = waveX + drift.x * 5.5;
-            const py = waveY + drift.y * 4.5;
-            atmosphere.style.transform = `translate3d(${px.toFixed(2)}px, ${py.toFixed(2)}px, 0)`;
-        }
-
-        if (rawProgress >= 1 && !hasExitStarted) {
-            hasExitStarted = true;
-            if (statusText) statusText.textContent = 'SYSTEM READY';
-            if (subStatusText) subStatusText.textContent = 'Entering Meow ecosystem';
-            window.setTimeout(() => {
-                intro.classList.add('is-exit');
-                document.body.classList.remove('bio-intro-active');
-                window.setTimeout(() => {
-                    window.cancelAnimationFrame(rafId);
-                    window.removeEventListener('pointermove', onPointerMove);
-                    intro.remove();
-                }, 620);
-            }, 120);
-        }
-
-        rafId = window.requestAnimationFrame(tick);
-    };
-
+    const events = new AbortController();
+    const on = (node, type, callback, options = {}) => node.addEventListener(type, callback, { ...options, signal: events.signal });
+    const background = [...document.body.children].filter(element => element !== intro && !['SCRIPT', 'STYLE', 'LINK'].includes(element.tagName));
+    const previousInert = new Map(background.map(element => [element, element.inert]));
+    let finished = false, exitTimer = 0, watchdog = 0;
+    let lastVideoTime = 0, lastProgress = performance.now();
+    background.forEach(element => { element.inert = true; });
     document.body.classList.add('bio-intro-active');
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    rafId = window.requestAnimationFrame(tick);
+    intro.dataset.state = 'loading';
+
+    const remove = () => {
+        clearTimeout(exitTimer); clearInterval(watchdog); events.abort();
+        const restoreFocus = intro.contains(document.activeElement);
+        video.pause(); video.removeAttribute('src'); video.load();
+        document.body.classList.remove('bio-intro-active');
+        previousInert.forEach((inert, element) => { element.inert = inert; });
+        intro.remove();
+        if (restoreFocus) {
+            const main = document.querySelector('main.content-wrapper');
+            if (main) {
+                main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true });
+                main.addEventListener('blur', () => main.removeAttribute('tabindex'), { once: true });
+            }
+        }
+    };
+    const finish = reason => {
+        if (finished) return;
+        finished = true; intro.dataset.state = 'leaving'; intro.dataset.exitReason = reason;
+        clearInterval(watchdog); video.pause();
+        intro.classList.add('is-exit');
+        exitTimer = setTimeout(remove, prefersReducedMotion() ? 0 : 280);
+    };
+    on(skip, 'click', () => finish('skip'));
+    on(document, 'keydown', event => {
+        if (event.key === 'Escape') {
+            event.preventDefault(); event.stopPropagation(); finish('skip');
+        }
+    }, { capture: true });
+    on(video, 'playing', () => {
+        if (!finished) { intro.dataset.state = 'playing'; lastProgress = performance.now(); }
+    });
+    on(video, 'ended', () => finish('ended'));
+    on(video, 'error', () => finish('unavailable'));
+    on(intro, 'transitionend', event => {
+        if (finished && event.target === intro && event.propertyName === 'opacity') remove();
+    });
+    on(window, 'pagehide', remove, { once: true });
+
+    // A healthy video always plays to its ended event. Only stalled playback times out.
+    watchdog = setInterval(() => {
+        const now = performance.now();
+        if (document.hidden) { lastProgress = now; return; }
+        if (video.currentTime > lastVideoTime) {
+            lastVideoTime = video.currentTime; lastProgress = now;
+        } else if (now - lastProgress >= 12000) finish('unavailable');
+    }, 1000);
+    video.muted = true; video.defaultMuted = true; video.playsInline = true;
+    video.src = video.dataset.src;
+    video.play().catch(() => finish('unavailable'));
 }
 
 function clearTextSelection() {

@@ -46,52 +46,23 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="./css/style.css?v=selection-ff0066-1">
+    <link rel="stylesheet" href="./css/style.css?v=selection-ff0066-video-intro-2">
     <link rel="stylesheet" href="./css/typography.css?v=3-shatter-identity">
     <link rel="stylesheet" href="./css/music-player.css?v=5-clean-scroll">
     <link rel="stylesheet" href="./css/dock.css?v=2-responsive-hover">
     <link rel="stylesheet" href="./css/music-motion.css?v=3-strong-floating-controller">
     <link rel="stylesheet" href="./css/music-select.css?v=1-themed-playlists">
+    <link rel="stylesheet" href="./css/video-intro.css?v=1-full-video">
 </head>
 
 <body>
-    <div id="bio-load-intro" class="bio-load-intro" aria-hidden="true">
-        <div class="bio-load-atmosphere">
-            <span class="bio-load-gradient bio-load-gradient-a"></span>
-            <span class="bio-load-gradient bio-load-gradient-b"></span>
-            <span class="bio-load-gradient bio-load-gradient-c"></span>
-            <span class="bio-load-scanlines"></span>
-            <span class="bio-load-ui-rail bio-load-ui-rail-left"></span>
-            <span class="bio-load-ui-rail bio-load-ui-rail-right"></span>
-
-            <div class="bio-load-system" id="bio-load-system">
-                <span class="bio-load-ring bio-load-ring-outer"></span>
-                <span class="bio-load-ring bio-load-ring-inner"></span>
-                <span class="bio-load-arc bio-load-arc-a"></span>
-                <span class="bio-load-arc bio-load-arc-b"></span>
-                <span class="bio-load-grid-plane"></span>
-                <span class="bio-load-frame bio-load-frame-a"></span>
-                <span class="bio-load-frame bio-load-frame-b"></span>
-                <span class="bio-load-nexus"></span>
-                <span class="bio-load-nexus-core"></span>
-                <div id="bio-load-traces" class="bio-load-traces" aria-hidden="true"></div>
-                <div id="bio-load-shards" class="bio-load-shards" aria-hidden="true"></div>
-            </div>
-
-            <div class="bio-load-identity" aria-live="polite">
-                <p class="bio-load-kicker">PERSONAL IDENTITY SYSTEM</p>
-                <h1 class="bio-load-name" data-identity="displayName">Meow Bebyboi</h1>
-                <p class="bio-load-caption">Cinematic portfolio environment</p>
-                <div class="bio-load-status-row">
-                    <span id="bio-load-status" class="bio-load-status">INITIALIZING</span>
-                    <span id="bio-load-percent" class="bio-load-percent">0%</span>
-                </div>
-                <div class="bio-load-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <span id="bio-load-progress-fill" class="bio-load-progress-fill"></span>
-                </div>
-                <p id="bio-load-substatus" class="bio-load-substatus">Preparing core modules</p>
-            </div>
-        </div>
+    <div id="bio-load-intro" class="bio-video-intro" role="dialog" aria-modal="true" aria-label="Video intro">
+        <video id="bio-intro-video" data-src="./assets/loading/bg-load01_sharp.mp4"
+            muted autoplay playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+        <button id="bio-intro-skip" class="bio-video-skip" type="button" aria-keyshortcuts="Escape">
+            <span data-vi="Bỏ qua" data-en="Skip intro">Bỏ qua</span>
+            <span class="bio-video-skip-key" aria-hidden="true">Esc</span>
+        </button>
     </div>
 
     <!-- Fixed taskbar; popup controls keep their existing theme/language IDs. -->
@@ -995,7 +966,7 @@
     <script src="./js/music-covers.js?v=3-playlists"></script>
     <script src="./js/music-lyrics.js?v=5-lyrics-clean"></script>
     <script src="./js/music-library.js?v=2-vietnamese-titles"></script>
-    <script src="./js/script.js?v=music-titles-space-6"></script>
+    <script src="./js/script.js?v=video-intro-7"></script>
     <script src="./js/dock.js?v=4-quick-home"></script>
     <script src="./js/music-motion.js?v=2-floating-controller"></script>
     <script src="./js/music-select.js?v=1-themed-playlists"></script>

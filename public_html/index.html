@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="./css/style.css?v=native-cursor-1">
     <link rel="stylesheet" href="./css/typography.css?v=3-shatter-identity">
-    <link rel="stylesheet" href="./css/music-player.css?v=6-cover-shine">
+    <link rel="stylesheet" href="./css/music-player.css?v=7-playlist-controls">
     <link rel="stylesheet" href="./css/dock.css?v=2-responsive-hover">
     <link rel="stylesheet" href="./css/music-motion.css?v=3-strong-floating-controller">
     <link rel="stylesheet" href="./css/music-select.css?v=1-themed-playlists">
@@ -905,7 +905,9 @@
             <p class="music-lyrics-note"></p>
         </div>
 
-        <div class="music-library-controls">
+        <details class="music-extras" open>
+          <summary><span data-vi="Playlist & tuỳ chỉnh" data-en="Playlist & settings">Playlist & tuỳ chỉnh</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+          <div class="music-library-controls">
             <div class="music-library-field">
                 <label id="music-playlist-label" for="music-playlist-select" data-vi="Playlist đang phát" data-en="Current playlist">Playlist đang phát</label>
                 <select id="music-playlist-select" aria-label="Playlist đang phát"></select>
@@ -917,8 +919,6 @@
             </div>
         </div>
 
-        <details class="music-extras" open>
-          <summary><span data-vi="Playlist & tuỳ chỉnh" data-en="Playlist & settings">Playlist & tuỳ chỉnh</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <div class="music-settings">
             <div class="music-modes">
               <button id="music-shuffle" class="ctrl-btn" type="button" title="Phát ngẫu nhiên" aria-label="Phát ngẫu nhiên" aria-pressed="false"><i class="fas fa-shuffle"></i></button>

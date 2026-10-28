@@ -16,7 +16,10 @@
         const abort = new AbortController();
         const on = (target, name, callback) => target.addEventListener(name, callback, { signal: abort.signal });
         const home = document.getElementById('dock-home-reload');
-        if (home) on(home, 'click', () => window.location.reload());
+        if (home) on(home, 'click', () => {
+            try { sessionStorage.setItem('bio_skip_intro_once', '1'); } catch { /* Reload still works without storage. */ }
+            window.location.reload();
+        });
         let pointer = null, focused = -1, raf = 0, last = 0;
         function frame(now) {
             raf = 0;

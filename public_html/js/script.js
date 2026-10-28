@@ -25,6 +25,7 @@ const isInteractiveTarget = (target) => {
 };
 
 function shouldPlayPageLoadIntro() {
+    if (document.documentElement.dataset.quickReload === '1') return false;
     const navEntries = performance.getEntriesByType && performance.getEntriesByType('navigation');
     const navigation = navEntries && navEntries[0];
     if (navigation && navigation.type) {

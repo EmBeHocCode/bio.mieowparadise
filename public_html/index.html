@@ -3,6 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Consume Home's one-time flag before the intro can paint.
+        try {
+            if (sessionStorage.getItem('bio_skip_intro_once') === '1') {
+                sessionStorage.removeItem('bio_skip_intro_once');
+                document.documentElement.dataset.quickReload = '1';
+            }
+        } catch { /* Storage may be unavailable in private/local contexts. */ }
+    </script>
+    <style>html[data-quick-reload="1"] #bio-load-intro { display: none; }</style>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Meow Bebyboi | E-Commerce Student & AI-Assisted Builder</title>
@@ -983,8 +993,8 @@
     <script src="./js/music-covers.js?v=3-playlists"></script>
     <script src="./js/music-lyrics.js?v=5-lyrics-clean"></script>
     <script src="./js/music-library.js?v=1"></script>
-    <script src="./js/script.js?v=music-space-3"></script>
-    <script src="./js/dock.js?v=3-home-reload"></script>
+    <script src="./js/script.js?v=quick-home-4"></script>
+    <script src="./js/dock.js?v=4-quick-home"></script>
     <script src="./js/typography.js?v=1"></script>
     <script src="./js/identity-shine.js?v=2-shatter-sync"></script>
     <script src="./js/identity-shatter.js?v=2-smooth-return"></script>

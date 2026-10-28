@@ -1930,31 +1930,6 @@ function initSecurityLabEmbed() {
     sync();
 }
 
-function initCustomCursor() {
-    if (isMobilePerformanceMode() || isCoarseOrSmallScreen() || prefersReducedMotion()) return;
-    document.querySelectorAll('.cursor-dot, .cursor-trail, .cursor-click-effect, .animated-cursor').forEach((el) => el.remove());
-    document.body.classList.remove('asset-cursor-enabled', 'custom-cursor-enabled', 'cursor-hover', 'cursor-left-down', 'cursor-right-down', 'animated-cursor-enabled');
-    document.body.classList.add('asset-cursor-enabled');
-
-    document.addEventListener('mousedown', (event) => {
-        if (event.button === 0) {
-            document.body.classList.add('cursor-left-down');
-        } else if (event.button === 2 || event.buttons === 2) {
-            document.body.classList.add('cursor-right-down');
-        }
-    }, { capture: true });
-
-    const restorePressedCursor = () => {
-        document.body.classList.remove('cursor-left-down');
-        document.body.classList.remove('cursor-right-down');
-    };
-
-    document.addEventListener('mouseup', restorePressedCursor, { capture: true });
-    document.addEventListener('pointerup', restorePressedCursor, { capture: true });
-    document.addEventListener('pointercancel', restorePressedCursor, { capture: true });
-    window.addEventListener('blur', restorePressedCursor);
-}
-
 // Initialize client-side features on load
 document.addEventListener('DOMContentLoaded', () => {
     initPageLoadIntro();
@@ -1969,7 +1944,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMusicPlayer();
     initFocusBubble();
     initSecurityLabEmbed();
-    initCustomCursor();
 
     // Toggle Status Bubble by clicking Avatar
     const avatarContainer = document.querySelector('.discord-avatar-container');

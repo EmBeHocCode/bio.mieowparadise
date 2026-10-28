@@ -61,16 +61,53 @@
         const reduced = matchMedia('(prefers-reduced-motion: reduce)');
         let track = null, lines = [], state = 'idle';
         let open = false, disposed = false, version = 0, pending = null;
+        let renderedCue = null, outgoing = null;
+        const animations = new Set();
         const text = () => copy[document.documentElement.lang.startsWith('en') ? 'en' : 'vi'];
         const stop = () => { pending?.abort(); pending = null; };
 
-        function put(node, value, animate = false) {
-            if (node.textContent === value) return;
+        function stopTransitions() {
+            animations.forEach(animation => {
+                animation.onfinish = animation.oncancel = null;
+                animation.cancel();
+            });
+            animations.clear();
+            outgoing?.remove(); outgoing = null;
+        }
+
+        function transition(node, frames, duration, complete = () => {}) {
+            const animation = node.animate(frames, { duration, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+            animations.add(animation);
+            animation.onfinish = () => {
+                animations.delete(animation); complete();
+                animation.onfinish = animation.oncancel = null;
+                animation.cancel();
+            };
+            animation.oncancel = () => { animations.delete(animation); complete(); };
+        }
+
+        function put(node, value, animate = false, force = false) {
+            if (node.textContent === value && !force) return;
+            const motion = animate && !reduced.matches && open && !document.hidden;
+            if (motion && node === current && node.textContent && value) {
+                const ghost = node.cloneNode(true);
+                ghost.removeAttribute('data-lyric-line');
+                ghost.setAttribute('aria-hidden', 'true');
+                ghost.classList.add('music-lyric-outgoing');
+                ghost.style.top = `${node.offsetTop}px`;
+                outgoing = ghost; windowEl.append(ghost);
+                transition(ghost, [
+                    { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' },
+                    { opacity: 0, transform: 'translateY(-10px)', filter: 'blur(2px)' }
+                ], 220, () => { ghost.remove(); if (outgoing === ghost) outgoing = null; });
+            }
             node.textContent = value;
-            if (animate && !reduced.matches && open) {
-                node.getAnimations().forEach(animation => animation.cancel());
-                node.animate([{ opacity: .45, transform: 'translateY(3px)' }, { opacity: 1, transform: 'translateY(0)' }],
-                    { duration: 160, easing: 'ease-out' });
+            if (motion && value) {
+                const opacity = node === current ? 1 : .65;
+                transition(node, [
+                    { opacity: 0, transform: `translateY(${node === current ? 10 : 6}px)`, filter: 'blur(2px)' },
+                    { opacity, transform: 'translateY(0)', filter: 'blur(0)' }
+                ], 320);
             }
         }
 
@@ -86,10 +123,13 @@
             const index = low - 1;
             const active = index >= 0 && Boolean(lines[index].text) && !audio.ended &&
                 (!Number.isFinite(audio.duration) || time < audio.duration);
+            const cue = `${index}:${active}:${text().instrumental}`;
+            const changed = cue !== renderedCue;
+            if (changed) { stopTransitions(); renderedCue = cue; }
+            put(previous, index >= 0 ? lines[active ? index - 1 : index]?.text || '' : '', changed);
+            put(current, active ? lines[index].text : text().instrumental, changed, changed);
             current.classList.toggle('is-instrumental', !active);
-            put(previous, index >= 0 ? lines[active ? index - 1 : index]?.text || '' : '');
-            put(current, active ? lines[index].text : text().instrumental, true);
-            put(next, lines[index + 1]?.text || '');
+            put(next, lines[index + 1]?.text || '', changed);
             element.dataset.lineIndex = active ? String(index) : '-1';
         }
 
@@ -144,6 +184,7 @@
         const controller = {
             setTrack(value) {
                 stop();
+                stopTransitions(); renderedCue = null;
                 version++;
                 lines = [];
                 track = null;
@@ -166,26 +207,27 @@
             },
             setOpen(value) {
                 open = value;
-                if (!open) stop();
+                if (!open) { stop(); stopTransitions(); }
                 else { render(); if (track && state !== 'ready') refresh(); }
             },
             dispose() {
                 disposed = true;
                 version++;
                 stop();
+                stopTransitions();
                 events.abort();
-                current.getAnimations().forEach(animation => animation.cancel());
             }
         };
         ['timeupdate', 'seeking', 'seeked', 'loadedmetadata', 'ratechange', 'ended'].forEach(name =>
             audio.addEventListener(name, sync, { signal: events.signal }));
         retry.addEventListener('click', refresh, { signal: events.signal });
         document.addEventListener('bio:languagechange', render, { signal: events.signal });
+        reduced.addEventListener('change', stopTransitions, { signal: events.signal });
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stop();
+            if (document.hidden) { stop(); stopTransitions(); }
             else if (open) { sync(); if (state === 'loading' || state === 'unavailable') refresh(); }
         }, { signal: events.signal });
-        window.addEventListener('pagehide', stop, { signal: events.signal });
+        window.addEventListener('pagehide', () => { stop(); stopTransitions(); }, { signal: events.signal });
         window.addEventListener('pageshow', event => {
             if (event.persisted && open) { sync(); if (state === 'loading') refresh(); }
         }, { signal: events.signal });

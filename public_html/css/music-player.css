@@ -91,7 +91,8 @@ body:has(.music-player.active) .theme-manager-panel.active { z-index: 1008; }
 .music-lyrics-head > span:first-child { display: flex; align-items: center; gap: 7px; }
 .music-lyrics-badge { color: var(--effect-text-color); font-size: .6rem; font-variant-numeric: tabular-nums; }
 .music-lyrics-body { min-height: 106px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding-block: 6px; }
-.music-lyrics-window { width: 100%; display: grid; grid-template-rows: 24px minmax(44px, auto) 24px; align-items: center; text-align: center; }
+.music-lyrics-window { position: relative; isolation: isolate; overflow: hidden; width: 100%; display: grid; grid-template-rows: 24px minmax(44px, auto) 24px; align-items: center; text-align: center; }
+.music-lyrics-window .music-lyric-outgoing { position: absolute; inset-inline: 0; pointer-events: none; }
 .music-lyrics-window[hidden], .music-lyrics-status[hidden], .music-lyrics-retry[hidden] { display: none; }
 .music-lyrics-window p, .music-lyrics-status, .music-lyrics-note { margin: 0; }
 .music-lyric-context { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--text-muted); opacity: .65; font: 400 .76rem/1.5 var(--font-sans); }

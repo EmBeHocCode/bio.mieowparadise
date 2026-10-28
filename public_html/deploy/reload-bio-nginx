@@ -1,0 +1,7 @@
+#!/bin/sh
+# Certbot calls deploy hooks only after a successful renewal.
+case " ${RENEWED_DOMAINS:-} " in
+    *" bio.mieowparadise.io.vn "*)
+        /usr/sbin/nginx -t && /bin/systemctl reload nginx
+        ;;
+esac

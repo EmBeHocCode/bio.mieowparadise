@@ -1,0 +1,9 @@
+{
+  "music_root": "/var/www/bio.mieowparadise.io.vn/public_html/assets/music",
+  "state_dir": "/var/lib/meow-bio-lyrics",
+  "model_dir": "/var/cache/meow-bio-lyrics/models",
+  "model": "small",
+  "threads": 1,
+  "port": 3014,
+  "languages_by_folder": { "Chill-music": "vi" }
+}

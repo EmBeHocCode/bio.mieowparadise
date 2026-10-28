@@ -1,0 +1,163 @@
+/* Reusable light sweep. Only the text is clipped; card/badge surfaces stay intact. */
+.shiny-text {
+    --shiny-ink: var(--text-main, #f8fafc);
+    color: var(--shiny-ink);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .shiny-text {
+        background-image: linear-gradient(105deg,
+            var(--shiny-ink) 0%, var(--shiny-ink) 43%,
+            #f01063 46%, #fff7fb 49%, #15d9c5 52%,
+            var(--shiny-ink) 56%, var(--shiny-ink) 100%);
+        background-size: 260% 100%;
+        background-position: 100% 50%;
+        background-repeat: no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.profile-real-name {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #b3bdcc;
+}
+
+.shiny-text--signature {
+    animation: shiny-resting-sweep 8s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+    animation-play-state: paused;
+}
+
+/* React Bits identity preset: one soft white band, painted by identity-shine.js. */
+.shiny-text--identity {
+    --shiny-ink: #726d6d;
+    display: inline-block;
+    background-image: linear-gradient(#726d6d, #726d6d);
+    background-size: 100% 100%;
+    animation: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.shiny-text--identity:focus-visible {
+    outline: 1px solid #b3bdcc;
+    outline-offset: 5px;
+    border-radius: 2px;
+}
+.identity-shards {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    background: none;
+}
+.shiny-text--identity.is-shattering {
+    background-image: none !important;
+    -webkit-text-fill-color: transparent;
+}
+
+.shiny-text--signature {
+    --shiny-ink: var(--primary-color);
+    animation-name: shiny-signature-sweep;
+    animation-duration: 14s;
+}
+
+.shiny-text.is-shiny-visible {
+    animation-play-state: running;
+}
+
+.section-badge .shiny-text {
+    --shiny-ink: var(--effect-text-color);
+}
+
+.shiny-text--reveal {
+    display: inline-block;
+}
+
+.typography-ready .shiny-text--reveal:not(.is-shiny-revealed) {
+    opacity: 0;
+    transform: translateY(4px);
+}
+
+.shiny-text--reveal.is-shiny-revealed {
+    animation: shiny-reveal-sweep 1.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#experience .project-item:focus-within {
+    border-color: #15d9c5;
+    box-shadow: 0 0 16px rgba(21, 217, 197, 0.13);
+    transform: translateY(-2px);
+}
+
+#experience .project-item:focus-within .shiny-text--project {
+    animation: shiny-hover-sweep 1.1s ease-out both;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #experience .project-item:hover {
+        border-color: #f01063;
+        box-shadow: 0 0 16px rgba(240, 16, 99, 0.16);
+        transform: translateY(-2px);
+    }
+    #experience .project-item:hover .shiny-text--project {
+        animation: shiny-hover-sweep 1.1s ease-out both;
+    }
+}
+
+#about .code-panel pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+@keyframes shiny-resting-sweep {
+    0%, 74% { background-position: 100% 50%; }
+    93%, 100% { background-position: 0% 50%; }
+}
+
+@keyframes shiny-signature-sweep {
+    0%, 82% { background-position: 100% 50%; }
+    98%, 100% { background-position: 0% 50%; }
+}
+
+@keyframes shiny-reveal-sweep {
+    0% { opacity: 0; transform: translateY(4px); background-position: 100% 50%; }
+    24% { opacity: 1; transform: translateY(0); background-position: 100% 50%; }
+    100% { opacity: 1; transform: translateY(0); background-position: 0% 50%; }
+}
+
+@keyframes shiny-hover-sweep {
+    from { background-position: 100% 50%; }
+    to { background-position: 0% 50%; }
+}
+
+/* Stable, high-contrast text when motion is reduced or gradients are unavailable. */
+@media (prefers-reduced-motion: reduce) {
+    .shiny-text,
+    .typography-ready .shiny-text--reveal {
+        animation: none !important;
+        background-image: none !important;
+        color: var(--shiny-ink);
+        -webkit-text-fill-color: var(--shiny-ink) !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    #experience .project-item:hover,
+    #experience .project-item:focus-within {
+        transform: none;
+    }
+    .identity-shards { display: none; }
+}
+
+@media (forced-colors: active) {
+    .shiny-text {
+        background-image: none !important;
+        color: CanvasText;
+        -webkit-text-fill-color: CanvasText !important;
+    }
+    .identity-shards { display: none; }
+}

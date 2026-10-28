@@ -12,3 +12,17 @@ public_html/assets/chrome-project-check/
 .DS_Store
 Thumbs.db
 *.log
+
+# Local build/transcription caches and old asset copies
+__pycache__/
+*.py[cod]
+public_html/assets/chrome-*/
+lyrics-tools/
+lyrics-exports*/
+lyrics-gap-check/
+backups/
+*.pem
+*.key
+*.1
+*-old
+*_old

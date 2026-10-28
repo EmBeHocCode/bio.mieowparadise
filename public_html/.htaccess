@@ -20,4 +20,10 @@
   <FilesMatch "\.(html)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
+  <Files "music-library.js">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </Files>
+  <FilesMatch "\.lrc$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
 </IfModule>

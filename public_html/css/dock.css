@@ -1,0 +1,60 @@
+:root { --dock-bottom: calc(14px + env(safe-area-inset-bottom)); --dock-popup-bottom: calc(100px + env(safe-area-inset-bottom)); }
+.site-dock {
+    position: fixed; left: 50%; bottom: var(--dock-bottom); transform: translateX(-50%);
+    z-index: 1010; display: flex; align-items: flex-end; gap: 12px;
+    height: 38px; padding: 1px 10px; box-sizing: border-box; isolation: isolate;
+    border: 1px solid #ffffff17; border-radius: 17px;
+    background: #101010dc; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 12px 32px #0009, inset 0 1px #ffffff09;
+}
+.dock-item {
+    position: relative; display: grid; place-items: center; flex: none;
+    width: 34px; height: 34px; margin: 0; padding: 0; border: 0;
+    border-radius: 14px; background: transparent; color: #adb7c1;
+    text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    /* JS owns geometry. The global anchor transition otherwise adds 350ms
+       of lag to Home/Messages/Mail but not to the two button elements. */
+    transition: color 60ms linear;
+}
+.dock-item::before { content: ''; position: absolute; inset: -5px; border-radius: 14px; }
+.dock-icon { width: 34px; height: 34px; display: grid; place-items: center; font-size: 19px; pointer-events: none; transform-origin: center; }
+.dock-item:hover, .dock-item:focus-visible, .dock-item[aria-expanded="true"], .dock-item.playing { color: var(--effect-text-color); }
+.dock-item:focus-visible { outline: 2px solid var(--effect-text-color); outline-offset: 4px; }
+.dock-item[aria-expanded="true"]::after { content: ''; position: absolute; bottom: -1px; width: 3px; height: 3px; border-radius: 50%; background: var(--effect-accent-color); }
+.dock-label { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%) translateY(2px); opacity: 0; pointer-events: none; white-space: nowrap; font: 500 11px var(--font-sans); color: #f7f7f7; background: #141414f5; border: 1px solid #ffffff1a; border-radius: 7px; padding: 6px 9px; transition: opacity 60ms linear, transform 60ms ease-out; }
+.dock-item:is(:hover, :focus-visible) .dock-label { opacity: 1; transform: translateX(-50%); }
+.dock-settings-panel {
+    position: fixed; left: 50%; bottom: var(--dock-popup-bottom); z-index: 1008;
+    width: min(280px, calc(100vw - 24px)); padding: 10px;
+    display: grid; gap: 4px; border: 1px solid var(--effect-soft-line); border-radius: 18px;
+    background: #101010f5; box-shadow: 0 16px 44px #0009;
+    opacity: 0; transform: translate(-50%, 12px); pointer-events: none;
+    transition: opacity .2s, transform .25s; max-height: calc(100dvh - 120px); overflow-y: auto;
+}
+.dock-settings-panel.active { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.dock-settings-header { display: flex; align-items: center; justify-content: space-between; color: var(--text-main); font: 600 .8rem var(--font-sans); padding-left: 10px; }
+.dock-settings-header button { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; }
+.dock-settings-panel .control-btn { display: grid; grid-template-columns: 24px 1fr auto; gap: 10px; width: 100%; min-height: 46px; height: auto; padding: 10px; border: none; background: transparent; color: var(--text-main); text-align: left; font: 500 .8rem var(--font-sans); backdrop-filter: none; }
+.dock-settings-panel .control-btn > i:first-child { color: var(--effect-text-color); font-size: 1rem; text-align: center; }
+.dock-settings-panel .control-btn > i:last-child { color: var(--text-muted); font-size: .65rem; }
+.dock-settings-panel .control-btn:hover, .dock-settings-header button:hover { background: var(--effect-active-bg); transform: none; box-shadow: none; }
+.dock-settings-panel button:focus-visible { outline: 2px solid var(--effect-text-color); outline-offset: -2px; }
+.dock-settings-panel .lang-text { border: 1px solid var(--effect-soft-line); padding: 3px 6px; border-radius: 5px; color: var(--effect-text-color); font-size: .65rem; }
+body .music-content.music-player { left: 50%; right: auto; bottom: var(--dock-popup-bottom); width: min(640px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - var(--dock-popup-bottom) - 12px); transform: translate(-50%, 16px) scale(.98); transform-origin: bottom center; }
+body .music-content.music-player.active { transform: translate(-50%, 0) scale(1); }
+#theme-manager-panel { top: auto; right: auto; left: 50%; bottom: var(--dock-popup-bottom); z-index: 1008; width: min(360px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - var(--dock-popup-bottom) - 12px); overflow-y: auto; transform: translate(-50%, 16px) scale(.98); transform-origin: bottom center; }
+#theme-manager-panel.active { transform: translate(-50%, 0) scale(1); }
+.app-container { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+html { scroll-padding-bottom: 100px; }
+@media (max-width: 768px) {
+    .floating-view-badge { bottom: calc(70px + env(safe-area-inset-bottom)); }
+    .back-to-top-btn { bottom: calc(70px + env(safe-area-inset-bottom)); }
+    .site-dock { background: #101010f5; }
+}
+@media (max-width: 560px) {
+    body .music-content.music-player { max-height: min(70dvh, calc(100dvh - var(--dock-popup-bottom) - 12px)); }
+}
+@media (hover: none) { .dock-label { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .site-dock *, .dock-settings-panel, #theme-manager-panel { transition: none; animation: none; }
+}

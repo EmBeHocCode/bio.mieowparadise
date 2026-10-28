@@ -180,27 +180,6 @@ function clearTextSelection() {
     }
 }
 
-function initHardSelectionGuard() {
-    document.addEventListener('selectstart', (event) => {
-        if (isEditableTarget(event.target)) return;
-        event.preventDefault();
-        clearTextSelection();
-    }, { capture: true });
-
-    document.addEventListener('dragstart', (event) => {
-        if (isEditableTarget(event.target)) return;
-        if (event.target && event.target.closest && event.target.closest('img, svg')) {
-            event.preventDefault();
-        }
-    }, { capture: true });
-
-    document.addEventListener('selectionchange', () => {
-        const active = document.activeElement;
-        if (isEditableTarget(active)) return;
-        clearTextSelection();
-    });
-}
-
 function initSourceProtection() {
     const blockEvent = (event) => {
         if (isEditableTarget(event.target)) return false;
@@ -211,8 +190,6 @@ function initSourceProtection() {
     };
 
     document.addEventListener('contextmenu', blockEvent, { capture: true });
-    document.addEventListener('copy', blockEvent, { capture: true });
-    document.addEventListener('cut', blockEvent, { capture: true });
 
     document.addEventListener('keydown', (event) => {
         const key = String(event.key || '').toLowerCase();
@@ -360,53 +337,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const root = document.documentElement;
 const body = document.body;
 const themeManagerToggle = document.getElementById('theme-manager-toggle');
-const animatedBgToggle = document.getElementById('animated-bg-toggle');
 
 const THEME_ACCENT_STORAGE_KEY = 'theme_accent';
-const ANIMATED_BACKGROUND_STORAGE_KEY = 'bio_animated_background';
 const DEFAULT_ACCENT_THEME = {
     primary: '#ff0066',
 };
-
-function getStoredAnimatedBackgroundPreference() {
-    try {
-        const value = localStorage.getItem(ANIMATED_BACKGROUND_STORAGE_KEY);
-        if (value === '1' || value === 'true' || value === 'on') return true;
-        if (value === '0' || value === 'false' || value === 'off') return false;
-    } catch (error) {
-        return null;
-    }
-
-    return null;
-}
-
-function getDefaultAnimatedBackgroundPreference() {
-    return false;
-}
-
-function isCompactAnimatedBackgroundLabel() {
-    return window.matchMedia('(max-width: 520px)').matches;
-}
-
-function getAnimatedBackgroundVisibleLabel(isEnabled) {
-    const compact = isCompactAnimatedBackgroundLabel();
-    const isEnglish = currentLang === 'en';
-
-    if (compact) {
-        if (isEnglish) return isEnabled ? 'Animated' : 'Static';
-        return isEnabled ? 'Động' : 'Tĩnh';
-    }
-
-    return isEnabled
-        ? (isEnglish ? 'Animated background' : 'Nền động')
-        : (isEnglish ? 'Static background' : 'Nền tĩnh');
-}
-
-let isAnimatedBackgroundEnabled = getStoredAnimatedBackgroundPreference();
-if (isAnimatedBackgroundEnabled === null) {
-    isAnimatedBackgroundEnabled = getDefaultAnimatedBackgroundPreference();
-}
-body.classList.toggle('static-bg-mode', !isAnimatedBackgroundEnabled);
 
 function normalizeHexColor(value) {
     const normalized = String(value || '').trim().replace(/^#?([0-9a-f]{6})$/iu, '#$1');
@@ -422,168 +357,12 @@ function hexToRgb(hex) {
     };
 }
 
-let astralThemeReloadTimer = null;
-let astralMeteorTimers = new Set();
-const astralBootToken = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-
-function getAstralBackgroundUrl(hex) {
-    const normalized = normalizeHexColor(hex) || DEFAULT_ACCENT_THEME.primary;
-    return `./assets/site3d-bg/index.html?accent=${encodeURIComponent(normalized.slice(1))}&boot=${encodeURIComponent(astralBootToken)}`;
-}
-
-function syncAstralBackgroundTheme(hex) {
-    const normalized = normalizeHexColor(hex) || DEFAULT_ACCENT_THEME.primary;
-    const iframe = document.getElementById('site3d-bg-frame');
-    if (!iframe) return;
-
-    const nextSrc = getAstralBackgroundUrl(normalized);
-    iframe.dataset.src = nextSrc;
-    iframe.dataset.accent = normalized;
-
-    if (!isAnimatedBackgroundEnabled || body.classList.contains('static-bg-mode')) return;
-    if (!iframe.getAttribute('src') || !iframe.contentWindow) return;
-
-    window.clearTimeout(astralThemeReloadTimer);
-    astralThemeReloadTimer = window.setTimeout(() => {
-        try {
-            iframe.contentWindow.postMessage({
-                type: 'parent-accent',
-                accent: normalized.slice(1),
-            }, '*');
-        } catch (error) {
-            // Ignore accent sync errors in embedded iframe.
-        }
-    }, 60);
-}
-
-function dispatchAccentToSite3D(iframe, accentHex) {
-    if (!iframe || !iframe.contentWindow) return;
-    const normalized = normalizeHexColor(accentHex) || DEFAULT_ACCENT_THEME.primary;
-    try {
-        iframe.contentWindow.postMessage({
-            type: 'parent-accent',
-            accent: normalized.slice(1),
-        }, '*');
-    } catch (error) {
-        // Ignore accent sync errors in embedded iframe.
-    }
-}
-
-function suppressSite3DCursor(iframe) {
-    if (!iframe || !iframe.contentDocument) return;
-    const doc = iframe.contentDocument;
-    if (doc.getElementById('bio-site3d-cursor-patch')) return;
-
-    const style = doc.createElement('style');
-    style.id = 'bio-site3d-cursor-patch';
-    style.textContent = `
-        html,
-        body,
-        body *,
-        canvas {
-            cursor: url("../mouse-cursor/cursor-default.cur"), url("../mouse-cursor/left-click.cur"), auto !important;
-        }
-        .cursor-fx { display: none !important; }
-        .cursor-fx-enabled .hero,
-        .cursor-fx-enabled .hero * {
-            cursor: url("../mouse-cursor/cursor-default.cur"), url("../mouse-cursor/left-click.cur"), auto !important;
-        }
-    `;
-    doc.head.appendChild(style);
-}
-
-function clearAstralMeteorTimers() {
-    astralMeteorTimers.forEach((timerId) => window.clearTimeout(timerId));
-    astralMeteorTimers.clear();
-}
-
-function teardownAstralSkyEffects() {
-    clearAstralMeteorTimers();
-    document.querySelectorAll('.astral-sky-layer').forEach((layer) => layer.remove());
-}
-
-function unloadSite3DBackground() {
-    const iframe = document.getElementById('site3d-bg-frame');
-    const bg = document.querySelector('.bg-fx');
-
-    window.clearTimeout(astralThemeReloadTimer);
-    if (iframe) iframe.removeAttribute('src');
-    if (bg) {
-        bg.classList.remove('bg-fx-webgl', 'bg-fx-mobile-lite');
-        bg.classList.add('bg-fx-lite');
-    }
-}
-
-function syncAnimatedBackgroundToggle() {
-    if (!animatedBgToggle) return;
-
-    const label = animatedBgToggle.querySelector('.animated-bg-label');
-    const icon = animatedBgToggle.querySelector('i');
-    const isEnabled = Boolean(isAnimatedBackgroundEnabled);
-    const isEnglish = currentLang === 'en';
-    const nextLabel = getAnimatedBackgroundVisibleLabel(isEnabled);
-    const fullLabel = isEnabled
-        ? (isEnglish ? 'Animated background' : 'N\u1ec1n \u0111\u1ed9ng')
-        : (isEnglish ? 'Static background' : 'N\u1ec1n t\u0129nh');
-    const nextTitle = isEnabled
-        ? (isEnglish ? 'Disable animated background to reduce lag' : 'T\u1eaft n\u1ec1n \u0111\u1ed9ng \u0111\u1ec3 gi\u1ea3m lag')
-        : (isEnglish ? 'Enable animated background' : 'B\u1eadt n\u1ec1n \u0111\u1ed9ng');
-
-    animatedBgToggle.classList.toggle('is-on', isEnabled);
-    animatedBgToggle.classList.toggle('is-static', !isEnabled);
-    animatedBgToggle.setAttribute('aria-pressed', String(isEnabled));
-    animatedBgToggle.setAttribute('aria-label', fullLabel);
-    animatedBgToggle.setAttribute('title', nextTitle);
-    if (label) label.textContent = nextLabel;
-    if (icon) icon.className = isEnabled ? 'fas fa-wand-magic-sparkles' : 'fas fa-layer-group';
-}
-
-function setAnimatedBackgroundEnabled(enabled, options = {}) {
-    const shouldEnable = Boolean(enabled);
-    isAnimatedBackgroundEnabled = shouldEnable;
-
-    if (options.persist) {
-        try {
-            localStorage.setItem(ANIMATED_BACKGROUND_STORAGE_KEY, shouldEnable ? '1' : '0');
-        } catch (error) {
-            // Ignore storage failures and keep the session state only.
-        }
-    }
-
-    body.classList.toggle('static-bg-mode', !shouldEnable);
-
-    if (shouldEnable) {
-        const bg = document.querySelector('.bg-fx');
-        if (bg) bg.classList.remove('bg-fx-lite');
-        initAstralSkyEffects();
-        initSite3DBackground();
-        syncAstralBackgroundTheme(currentAccentTheme);
-    } else {
-        unloadSite3DBackground();
-        teardownAstralSkyEffects();
-    }
-
-    syncAnimatedBackgroundToggle();
-}
-
-function initAnimatedBackgroundToggle() {
-    syncAnimatedBackgroundToggle();
-    if (!animatedBgToggle) return;
-
-    animatedBgToggle.addEventListener('click', () => {
-        setAnimatedBackgroundEnabled(!isAnimatedBackgroundEnabled, { persist: true });
-    });
-
-    window.addEventListener('resize', syncAnimatedBackgroundToggle, { passive: true });
-}
-
 function applyAccentTheme(hex) {
     const normalized = normalizeHexColor(hex) || DEFAULT_ACCENT_THEME.primary;
     const { r, g, b } = hexToRgb(normalized);
     root.style.setProperty('--primary-color', normalized);
     root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
     root.style.removeProperty('--accent-text-color');
-    syncAstralBackgroundTheme(normalized);
     return normalized;
 }
 
@@ -635,45 +414,7 @@ const translations = {
 const STATIC_VIEW_STORAGE_KEY = 'bio_bei_static_views';
 const STATIC_VIEW_SESSION_KEY = 'bio_bei_static_viewed';
 const STATIC_VIEW_BASE = 0;
-const MUSIC_SHUFFLE_STORAGE_KEY = 'bio_bei_music_shuffle';
-const STATIC_MUSIC_TRACKS = [
-    '01-hen-ho-nhung-khong-yeu.mp3',
-    '02-hat-mua-vuong-van-nam-con-remix.mp3',
-    '03-nhuong-lai-noi-dau-remix.mp3',
-    '04-loi-lam-em-mang-di.mp3',
-    '05-hoa-no-ko-maui.mp3',
-    '06-thiep-hong-sai-ten.mp3',
-    '07-hai-chu-da-tung.mp3',
-    '08-ai-lam-em-phai-khoc.mp3',
-    '09-doanuyen-bo-lo.mp3',
-    '10-ko-ai-noi-chia-tay.mp3',
-    '11-em-nao-co-toi.mp3',
-    '12-dung-hoi-em-on-khong.mp3',
-    '13-em-thua-co-ta.mp3',
-    '14-hat-mua-vuong-van.mp3',
-    '15-mo-long-vi-ai.mp3',
-    '16-nhuong-lai-noi-dau.mp3',
-    '17-em-chang-the-quen.mp3',
-    '18-thiep-hong-sai-ten-remix.mp3',
-    '19-thiep-hong-sai-ten-chill.mp3',
-    '20-binh-yen-nhe.mp3',
-    '21-hai-nguoi-hai-huong.mp3',
-    '22-tinh-yeu-cua-toi.mp3',
-    '23-em-se-la-nguoi-ra-di.mp3',
-    '24-nua-vang-trang.mp3',
-    '25-co-ta.mp3',
-    '26-dem-trang.mp3',
-    '27-em-se-la-nguoi-ra-di.mp3',
-    '28-tra-lai-thanh-xuan-cho-em.mp3',
-    '29-lac-duong.mp3',
-    '30-ko-duoc-khoc.mp3',
-    '31-le-cay-3.mp3',
-    '32-ai-no.mp3'
-].map((file, index) => ({
-    id: index + 1,
-    file: decodeURIComponent(file),
-    url: `./assets/music/${encodeURIComponent(file)}`
-}));
+const MUSIC_STARTUP_PLAYLIST_KEY = 'bio_music_startup_playlist';
 
 function updateLanguage(lang) {
     translatableElements.forEach(el => {
@@ -691,6 +432,8 @@ function updateLanguage(lang) {
     langText.innerText = lang.toUpperCase();
     localStorage.setItem('lang', lang);
     currentLang = lang;
+    document.documentElement.lang = lang;
+    document.dispatchEvent(new CustomEvent('bio:languagechange', { detail: { lang } }));
 
     // Re-init components that use static text
     initMCPing();
@@ -703,7 +446,6 @@ function updateLanguage(lang) {
     if (typeof updateSectionToggleLabels === 'function') {
         updateSectionToggleLabels();
     }
-    syncAnimatedBackgroundToggle();
 }
 
 // Initial language set
@@ -716,77 +458,8 @@ langToggle.addEventListener('click', () => {
     updateLanguage(nextLang);
 });
 
-// UI Toggle Logic
-const uiToggle = document.getElementById('ui-toggle');
-const uiIcon = uiToggle.querySelector('i');
-
-// Always recover UI on reload so the page never looks "broken".
+// Recover the content for any browser restoring the former hidden-UI state.
 body.classList.remove('ui-hidden');
-uiIcon.className = 'fas fa-eye';
-
-function syncSceneControlMode() {
-    const isHidden = body.classList.contains('ui-hidden');
-    const sceneDock = document.getElementById('scene-control-dock');
-    body.classList.toggle('scene-control-active', isHidden);
-    if (sceneDock) {
-        sceneDock.setAttribute('aria-hidden', String(!isHidden));
-    }
-
-    if (isHidden) {
-        ensureSite3DBackgroundLoaded();
-        suppressSite3DCursor(document.getElementById('site3d-bg-frame'));
-    }
-}
-
-uiToggle.addEventListener('click', () => {
-    body.classList.toggle('ui-hidden');
-    const isHidden = body.classList.contains('ui-hidden');
-    uiIcon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
-    syncSceneControlMode();
-});
-
-syncSceneControlMode();
-
-function initSceneControlDock() {
-    const dock = document.getElementById('scene-control-dock');
-    const iframe = document.getElementById('site3d-bg-frame');
-    if (!dock || !iframe) return;
-
-    iframe.addEventListener('load', () => {
-        suppressSite3DCursor(iframe);
-        dispatchAccentToSite3D(iframe, currentAccentTheme);
-    });
-
-    const sendSceneWheel = (deltaY) => {
-        if (typeof window.dispatchSite3DWheel === 'function') {
-            window.dispatchSite3DWheel(deltaY);
-        }
-    };
-
-    dock.addEventListener('wheel', (event) => {
-        if (!body.classList.contains('ui-hidden')) return;
-        event.preventDefault();
-        event.stopPropagation();
-        sendSceneWheel(event.deltaY);
-    }, { passive: false });
-
-    dock.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-scene-action]');
-        if (!button) return;
-
-        const action = button.dataset.sceneAction;
-        if (action === 'zoom-in') {
-            sendSceneWheel(-260);
-        } else if (action === 'zoom-out') {
-            sendSceneWheel(260);
-        } else if (action === 'reset') {
-            const currentSrc = iframe.getAttribute('src');
-            if (currentSrc) {
-                iframe.src = currentSrc;
-            }
-        }
-    });
-}
 
 // Copy IP to Clipboard with Toast Notification
 let toastTimeout;
@@ -899,16 +572,24 @@ function initThemeManager() {
 
     const openPanel = () => {
         panel.classList.add('active');
+        panel.inert = false;
         panel.setAttribute('aria-hidden', 'false');
         themeManagerToggle.classList.add('active');
+        themeManagerToggle.setAttribute('aria-expanded', 'true');
+        document.dispatchEvent(new CustomEvent('bio:panelopen', { detail: 'theme' }));
         syncControls(currentAccentTheme);
+        closeBtn?.focus({ preventScroll: true });
     };
 
     const closePanel = () => {
+        if (panel.contains(document.activeElement)) document.getElementById('dock-settings-toggle')?.focus({ preventScroll: true });
         panel.classList.remove('active');
+        panel.inert = true;
         panel.setAttribute('aria-hidden', 'true');
         themeManagerToggle.classList.remove('active');
+        themeManagerToggle.setAttribute('aria-expanded', 'false');
     };
+    document.addEventListener('bio:panelopen', event => { if (event.detail !== 'theme') closePanel(); });
 
     themeManagerToggle.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1194,14 +875,23 @@ function initMusicPlayer() {
     const trackCountEl = document.getElementById('music-track-count');
     const trackListEl = document.getElementById('music-track-list');
     const musicCover = document.getElementById('music-cover');
+    const playlistSelect = document.getElementById('music-playlist-select');
+    const startupSelect = document.getElementById('music-startup-select');
+    const backdrop = document.getElementById('music-backdrop');
 
     if (!audio || !toggleBtn) return;
+    const coverController = window.createMusicCoverController?.(document.getElementById('music-cover-image'));
+    const lyricsController = window.createMusicLyricsController?.({ audio, element: document.getElementById('music-lyrics') });
 
     let playlist = [];
+    let library = [];
+    let activePlaylist = null;
+    let startupPlaylist = 'random';
     let currentTrackIndex = -1;
     let isPlaying = false;
     let loopMode = 'off';
-    let shuffleMode = localStorage.getItem(MUSIC_SHUFFLE_STORAGE_KEY) === '1';
+    // Every new page session starts shuffled, regardless of the last session.
+    let shuffleMode = true;
     let playbackHistory = [];
     let audioContext = null;
     let sourceNode = null;
@@ -1210,9 +900,12 @@ function initMusicPlayer() {
     let isSeeking = false;
     let hasBoundAutoplayUnlock = false;
     let isMutedAutoplay = false;
+    let mediaVersion = 0;
 
     const humanizeTrackTitle = (filename) => {
-        return decodeURIComponent(filename)
+        let decoded = filename;
+        try { decoded = decodeURIComponent(filename); } catch { /* Literal percent in a filename. */ }
+        return decoded
             .replace(/\.[^.]+$/, '')
             .replace(/^\d+\s*[-_.]?\s*/u, '')
             .replace(/[-_]+/g, ' ')
@@ -1231,10 +924,13 @@ function initMusicPlayer() {
     };
 
     const formatTime = (seconds) => {
-        if (!Number.isFinite(seconds) || seconds < 0) return '00:00';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        if (!Number.isFinite(seconds) || seconds < 0) return '00:00.00';
+        // Count whole centiseconds so minute boundaries and LRC timestamps agree.
+        const ticks = Math.floor(seconds * 100 + 1e-6);
+        const mins = Math.floor(ticks / 6000);
+        const secs = Math.floor(ticks / 100) % 60;
+        const fraction = ticks % 100;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(fraction).padStart(2, '0')}`;
     };
 
     const ensureAudioGraph = async() => {
@@ -1279,6 +975,8 @@ function initMusicPlayer() {
     };
 
     const enableAudiblePlayback = async() => {
+        if (!playlist.length || currentTrackIndex < 0) return;
+        const version = mediaVersion;
         audio.defaultMuted = false;
         audio.muted = false;
         audio.removeAttribute('muted');
@@ -1295,26 +993,40 @@ function initMusicPlayer() {
         if (audio.paused) {
             await audio.play();
         }
+        if (version !== mediaVersion) return;
 
         isPlaying = !audio.paused;
         restoreTrackSubtitle();
         updatePlayState();
     };
 
+    const isMusicShortcut = (event) => {
+        if (event.code !== 'Space' && event.key !== ' ') return false;
+        if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return false;
+        const target = event.target;
+        return !(target instanceof Element && target.closest('input, textarea, select, button, a[href], summary, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="textbox"], [role="slider"], [role="combobox"], audio[controls], video[controls]'));
+    };
+
     const bindAutoplayUnlock = () => {
         if (hasBoundAutoplayUnlock) return;
         hasBoundAutoplayUnlock = true;
-        const unlockAutoplay = async() => {
+        const unlockAutoplay = async(event) => {
             window.removeEventListener('pointerdown', unlockAutoplay, true);
             window.removeEventListener('touchstart', unlockAutoplay, true);
             window.removeEventListener('click', unlockAutoplay, true);
             window.removeEventListener('keydown', unlockAutoplay, true);
             hasBoundAutoplayUnlock = false;
-            if (isMutedAutoplay) {
-                await enableAudiblePlayback();
-                return;
+            // Let the shortcut toggle once, without racing the autoplay unlock.
+            if (event.type === 'keydown' && isMusicShortcut(event)) return;
+            try {
+                if (isMutedAutoplay) {
+                    await enableAudiblePlayback();
+                    return;
+                }
+                await playCurrent();
+            } catch (error) {
+                if (error.name !== 'AbortError') bindAutoplayUnlock();
             }
-            await playCurrent();
         };
         window.addEventListener('pointerdown', unlockAutoplay, { once: true, capture: true });
         window.addEventListener('touchstart', unlockAutoplay, { once: true, capture: true });
@@ -1337,6 +1049,7 @@ function initMusicPlayer() {
     const updateShuffleUI = () => {
         if (!shuffleBtn) return;
         shuffleBtn.classList.toggle('active', shuffleMode);
+        shuffleBtn.setAttribute('aria-pressed', String(shuffleMode));
         shuffleBtn.title = shuffleMode ? 'Phát ngẫu nhiên: Bật' : 'Phát ngẫu nhiên: Tắt';
         shuffleBtn.setAttribute('aria-label', shuffleBtn.title);
     };
@@ -1359,12 +1072,16 @@ function initMusicPlayer() {
             icon.className = 'fas fa-repeat';
             loopBtn.title = 'Không lặp';
         }
+        loopBtn.setAttribute('aria-label', loopBtn.title);
+        loopBtn.setAttribute('aria-pressed', String(loopMode !== 'off'));
     };
 
     const updatePlayState = () => {
         if (!playPauseBtn || !toggleBtn) return;
         const icon = playPauseBtn.querySelector('i');
         const btnIcon = toggleBtn.querySelector('i');
+        playPauseBtn.setAttribute('aria-label', isPlaying ? 'Tạm dừng nhạc' : 'Phát nhạc');
+        playPauseBtn.title = isPlaying ? 'Tạm dừng nhạc' : 'Phát nhạc';
 
         if (isPlaying) {
             if (icon) icon.className = 'fas fa-pause';
@@ -1382,19 +1099,35 @@ function initMusicPlayer() {
     const renderTrackList = () => {
         if (!trackListEl) return;
         trackListEl.innerHTML = '';
+        [playPauseBtn, prevBtn, nextBtn, progressSlider].forEach(control => {
+            if (control) control.disabled = !playlist.length;
+        });
+        if (!playlist.length) {
+            const empty = document.createElement('p');
+            empty.className = 'music-empty';
+            empty.textContent = currentLang === 'vi' ? 'Playlist này chưa có bài hát.' : 'This playlist has no tracks yet.';
+            trackListEl.append(empty);
+        }
 
         playlist.forEach((track, index) => {
             const item = document.createElement('button');
             item.type = 'button';
             item.className = `music-track-item${index === currentTrackIndex ? ' active' : ''}`;
             item.title = `${track.title} (${track.file})`;
-            item.innerHTML = `
-                <span class="music-track-index">${String(index + 1).padStart(2, '0')}</span>
-                <span class="music-track-meta">
-                    <span class="music-track-name" title="${track.title}">${track.title}</span>
-                    <span class="music-track-file" title="${track.file}">${track.file}</span>
-                </span>
-            `;
+            if (index === currentTrackIndex) item.setAttribute('aria-current', 'true');
+            const number = document.createElement('span');
+            number.className = 'music-track-index';
+            number.textContent = String(index + 1).padStart(2, '0');
+            const meta = document.createElement('span');
+            meta.className = 'music-track-meta';
+            const name = document.createElement('span');
+            name.className = 'music-track-name';
+            name.textContent = name.title = track.title;
+            const file = document.createElement('span');
+            file.className = 'music-track-file';
+            file.textContent = file.title = track.file;
+            meta.append(name, file);
+            item.append(number, meta);
             item.addEventListener('click', () => {
                 if (shuffleMode && currentTrackIndex >= 0 && currentTrackIndex !== index) {
                     playbackHistory.push(currentTrackIndex);
@@ -1414,14 +1147,20 @@ function initMusicPlayer() {
         const duration = audio.duration || 0;
         const current = audio.currentTime || 0;
         progressSlider.value = duration ? (current / duration) * 100 : 0;
+        progressSlider.dispatchEvent(new Event('elastic:sync'));
+        progressSlider.setAttribute('aria-valuetext', `${formatTime(current)} / ${formatTime(duration)}`);
         if (currentTimeEl) currentTimeEl.textContent = formatTime(current);
         if (durationEl) durationEl.textContent = formatTime(duration);
     };
 
     const loadTrack = (index, autoPlay = false, shouldLoadMedia = true) => {
         if (!playlist.length) return;
+        mediaVersion++;
+        isSeeking = false;
         currentTrackIndex = (index + playlist.length) % playlist.length;
         const track = playlist[currentTrackIndex];
+        coverController?.setTrack(track.id, track.title);
+        lyricsController?.setTrack(track);
 
         if (shouldLoadMedia) {
             audio.src = track.url;
@@ -1439,9 +1178,12 @@ function initMusicPlayer() {
             subtitleEl.textContent = getTrackSubtitle(track, currentTrackIndex);
             subtitleEl.title = track.file;
         }
-        if (currentTimeEl) currentTimeEl.textContent = '00:00';
-        if (durationEl) durationEl.textContent = '00:00';
-        if (progressSlider) progressSlider.value = 0;
+        if (currentTimeEl) currentTimeEl.textContent = '00:00.00';
+        if (durationEl) durationEl.textContent = '00:00.00';
+        if (progressSlider) {
+            progressSlider.value = 0;
+            progressSlider.dispatchEvent(new Event('elastic:sync'));
+        }
 
         renderTrackList();
 
@@ -1453,19 +1195,22 @@ function initMusicPlayer() {
         }
     };
 
-    const tryMutedAutoplay = async(error) => {
+    const tryMutedAutoplay = async(error, version) => {
+        if (version !== mediaVersion || !playlist.length) return;
         console.log('Audible autoplay prevented by browser, trying muted autoplay...', error);
         try {
             audio.defaultMuted = true;
             audio.muted = true;
             audio.setAttribute('muted', '');
             await audio.play();
+            if (version !== mediaVersion) return;
             isMutedAutoplay = true;
             isPlaying = true;
             showAutoplayPrompt('sound');
             updatePlayState();
             bindAutoplayUnlock();
         } catch (mutedError) {
+            if (version !== mediaVersion || mutedError.name === 'AbortError') return;
             console.log('Autoplay prevented by browser, waiting for interaction...', mutedError);
             isMutedAutoplay = false;
             isPlaying = false;
@@ -1476,9 +1221,12 @@ function initMusicPlayer() {
     };
 
     const playCurrent = async({ allowMutedFallback = false } = {}) => {
+        if (!playlist.length || currentTrackIndex < 0) return;
+        let version = mediaVersion;
         try {
             if (!audio.currentSrc && currentTrackIndex >= 0) {
                 loadTrack(currentTrackIndex, false, true);
+                version = mediaVersion;
             }
             audio.defaultMuted = false;
             audio.muted = false;
@@ -1497,12 +1245,14 @@ function initMusicPlayer() {
                 }
             }
             await audio.play();
-            isPlaying = true;
+            if (version !== mediaVersion) return;
+            isPlaying = !audio.paused;
             restoreTrackSubtitle();
             updatePlayState();
         } catch (error) {
+            if (version !== mediaVersion || error.name === 'AbortError') return;
             if (allowMutedFallback) {
-                await tryMutedAutoplay(error);
+                await tryMutedAutoplay(error, version);
                 return;
             }
             console.log('Autoplay prevented by browser, waiting for interaction...', error);
@@ -1549,39 +1299,141 @@ function initMusicPlayer() {
         loadTrack(currentTrackIndex - 1, true);
     };
 
-    const bootstrapPlaylist = async() => {
-        playlist = STATIC_MUSIC_TRACKS.map((track) => ({
-            ...track,
-            title: humanizeTrackTitle(track.file),
-        }));
-
-        if (!playlist.length) {
-            if (titleEl) titleEl.textContent = 'Không có nhạc trong assets/music';
-            if (subtitleEl) subtitleEl.textContent = 'Hãy upload file mp3 cùng thư mục web tĩnh';
-            return;
+    const renderPlaylistSelectors = () => {
+        playlistSelect?.replaceChildren();
+        startupSelect?.replaceChildren();
+        if (startupSelect) {
+            const random = document.createElement('option');
+            random.value = 'random';
+            random.textContent = currentLang === 'vi' ? 'Ngẫu nhiên playlist có bài' : 'Random non-empty playlist';
+            startupSelect.append(random);
         }
-
-        const initialIndex = getRandomIndex(-1);
-        loadTrack(initialIndex, false, true);
-        playCurrent({ allowMutedFallback: true });
+        library.forEach(entry => {
+            const option = document.createElement('option');
+            option.value = entry.id;
+            option.textContent = `${entry.name} · ${entry.tracks.length}`;
+            playlistSelect?.append(option);
+            const startupOption = option.cloneNode(true);
+            startupOption.disabled = !entry.tracks.length;
+            startupSelect?.append(startupOption);
+        });
+        if (playlistSelect && activePlaylist) playlistSelect.value = activePlaylist.id;
+        if (startupSelect) startupSelect.value = startupPlaylist;
     };
 
-    // Toggle Music Panel Visibility
-    toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        panel.classList.toggle('active');
+    const selectPlaylist = (id, autoPlay = true) => {
+        const entry = library.find(item => item.id === id);
+        if (!entry) return;
+        // Only this function changes playlists. Next/ended/shuffle never call it.
+        mediaVersion++;
+        pauseCurrent();
+        activePlaylist = entry;
+        playlist = entry.tracks;
+        currentTrackIndex = -1;
+        playbackHistory = [];
+        isSeeking = false;
+        if (playlistSelect) playlistSelect.value = entry.id;
+        panel.dataset.playlist = entry.id;
+        if (!playlist.length) {
+            audio.removeAttribute('src');
+            audio.load();
+            if (titleEl) titleEl.textContent = titleEl.title = entry.name;
+            if (subtitleEl) subtitleEl.textContent = currentLang === 'vi' ? 'Playlist này chưa có bài hát.' : 'This playlist has no tracks yet.';
+            coverController?.clearTrack(entry.name);
+            lyricsController?.setTrack(null);
+            syncProgress();
+            renderTrackList();
+            return;
+        }
+        loadTrack(shuffleMode ? getRandomIndex() : 0, autoPlay);
+    };
+
+    const bootstrapPlaylist = () => {
+        const config = window.MEOW_MUSIC_LIBRARY || {};
+        const ids = new Set();
+        library = (Array.isArray(config.playlists) ? config.playlists : []).flatMap(entry => {
+            if (!entry || typeof entry.id !== 'string' || !/^[a-z0-9_-]+$/i.test(entry.id) || ids.has(entry.id) || typeof entry.folder !== 'string' || !entry.folder || /[\\/]/.test(entry.folder) || entry.folder === '..') return [];
+            ids.add(entry.id);
+            const tracks = (Array.isArray(entry.tracks) ? entry.tracks : []).filter(file => typeof file === 'string' && file && !/[\\/]/.test(file)).map(file => ({
+                id: `${entry.id}:${file}`,
+                file,
+                title: humanizeTrackTitle(file),
+                url: `./assets/music/${encodeURIComponent(entry.folder)}/${encodeURIComponent(file)}`
+            }));
+            return [{ id: entry.id, name: entry.name || entry.id, tracks }];
+        });
+        const available = library.filter(entry => entry.tracks.length);
+        const canAutoplay = id => id === 'random' || available.some(entry => entry.id === id);
+        const saved = localStorage.getItem(MUSIC_STARTUP_PLAYLIST_KEY);
+        startupPlaylist = canAutoplay(saved) ? saved : canAutoplay(config.startupPlaylist) ? config.startupPlaylist : 'random';
+        renderPlaylistSelectors();
+        const initial = available.find(entry => entry.id === startupPlaylist) || available[Math.floor(Math.random() * available.length)];
+        if (initial) {
+            selectPlaylist(initial.id, false);
+            playCurrent({ allowMutedFallback: true });
+        } else if (library.length) selectPlaylist(library[0].id, false);
+        else renderTrackList();
+    };
+
+    playlistSelect?.addEventListener('change', () => selectPlaylist(playlistSelect.value));
+    startupSelect?.addEventListener('change', () => {
+        startupPlaylist = startupSelect.value;
+        localStorage.setItem(MUSIC_STARTUP_PLAYLIST_KEY, startupPlaylist);
+        showToast(currentLang === 'vi' ? 'Đã lưu lựa chọn tự phát cho lần mở web sau.' : 'Startup playlist saved for your next visit.');
+    });
+    document.addEventListener('bio:languagechange', () => {
+        renderPlaylistSelectors();
+        renderTrackList();
+        if (activePlaylist && !playlist.length && subtitleEl) subtitleEl.textContent = currentLang === 'vi' ? 'Playlist này chưa có bài hát.' : 'This playlist has no tracks yet.';
     });
 
-    // Keep the panel open while interacting; close it only via the toggle button or Escape.
+    // Fog separates the player from the page while retaining the dock controls.
+    const backgroundElements = [...document.querySelectorAll('.app-container, .floating-view-badge, .back-to-top-btn')];
+    const previousInert = new Map();
+    const setPanelOpen = (open) => {
+        const wasOpen = panel.classList.contains('active');
+        panel.classList.toggle('active', open);
+        panel.inert = !open;
+        lyricsController?.setOpen(open);
+        backdrop?.classList.toggle('active', open);
+        document.body.classList.toggle('music-is-open', open);
+        if (wasOpen !== open) {
+            backgroundElements.forEach(element => {
+                if (open) { previousInert.set(element, element.inert); element.inert = true; }
+                else element.inert = previousInert.get(element) || false;
+            });
+            if (!open) previousInert.clear();
+        }
+        toggleBtn.setAttribute('aria-expanded', String(open));
+        if (open) {
+            document.dispatchEvent(new CustomEvent('bio:panelopen', { detail: 'music' }));
+            document.getElementById('music-close')?.focus({ preventScroll: true });
+        }
+        if (!open && panel.contains(document.activeElement)) toggleBtn.focus({ preventScroll: true });
+    };
+    document.addEventListener('bio:panelopen', event => { if (event.detail !== 'music') setPanelOpen(false); });
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setPanelOpen(!panel.classList.contains('active'));
+    });
+    document.getElementById('music-close')?.addEventListener('click', () => setPanelOpen(false));
+    backdrop?.addEventListener('click', () => setPanelOpen(false));
+
+    // Close with the dock, close button, backdrop or Escape.
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && panel.classList.contains('active')) {
-            panel.classList.remove('active');
+            setPanelOpen(false);
+        }
+        if (isMusicShortcut(e) && playlist.length && currentTrackIndex >= 0) {
+            e.preventDefault();
+            if (audio.paused) playCurrent();
+            else pauseCurrent();
         }
     });
 
     // Play/Pause Button inside panel
     playPauseBtn.addEventListener('click', () => {
-        if (isPlaying) {
+        if (!audio.paused) {
             pauseCurrent();
         } else {
             playCurrent();
@@ -1594,7 +1446,6 @@ function initMusicPlayer() {
     shuffleBtn?.addEventListener('click', () => {
         shuffleMode = !shuffleMode;
         playbackHistory = [];
-        localStorage.setItem(MUSIC_SHUFFLE_STORAGE_KEY, shuffleMode ? '1' : '0');
         updateShuffleUI();
     });
 
@@ -1627,6 +1478,7 @@ function initMusicPlayer() {
 
     speedSlider?.addEventListener('input', (e) => {
         const speed = parseFloat(e.target.value);
+        audio.defaultPlaybackRate = speed;
         audio.playbackRate = speed;
         if (speedValueEl) speedValueEl.textContent = `${speed.toFixed(2)}x`;
     });
@@ -1635,6 +1487,7 @@ function initMusicPlayer() {
         isSeeking = true;
         const previewTime = (audio.duration || 0) * (parseFloat(progressSlider.value) / 100);
         if (currentTimeEl) currentTimeEl.textContent = formatTime(previewTime);
+        progressSlider.setAttribute('aria-valuetext', `${formatTime(previewTime)} / ${formatTime(audio.duration || 0)}`);
     });
 
     progressSlider?.addEventListener('change', () => {
@@ -1645,16 +1498,18 @@ function initMusicPlayer() {
     });
 
     audio.addEventListener('timeupdate', syncProgress);
+    audio.addEventListener('seeked', syncProgress);
     audio.addEventListener('loadedmetadata', syncProgress);
     audio.addEventListener('play', () => {
-        isPlaying = true;
+        isPlaying = !audio.paused;
         updatePlayState();
     });
     audio.addEventListener('pause', () => {
-        isPlaying = false;
+        isPlaying = !audio.paused;
         updatePlayState();
     });
     audio.addEventListener('ended', () => {
+        if (!playlist.length) return;
         if (loopMode === 'one') {
             audio.currentTime = 0;
             playCurrent();
@@ -1678,6 +1533,7 @@ function initMusicPlayer() {
     });
 
     audio.addEventListener('error', () => {
+        if (!playlist.length) return;
         const missingText = currentLang === 'vi'
             ? 'Không mở được file nhạc hiện tại'
             : 'Unable to load the current audio file';
@@ -1914,124 +1770,6 @@ function initFocusBubble() {
     }, 1800);
 }
 
-function initSite3DBackground() {
-    const iframe = document.getElementById('site3d-bg-frame');
-    const bg = document.querySelector('.bg-fx');
-    if (!iframe) return;
-
-    if (!isAnimatedBackgroundEnabled) {
-        unloadSite3DBackground();
-        return;
-    }
-
-    if (prefersReducedMotion() || isSaveDataMode()) {
-        iframe.removeAttribute('src');
-        if (bg) bg.classList.add('bg-fx-lite');
-        return;
-    }
-
-    if (isMobilePerformanceMode()) {
-        iframe.removeAttribute('src');
-        if (bg) bg.classList.add('bg-fx-lite', 'bg-fx-mobile-lite');
-        return;
-    }
-
-    ensureSite3DBackgroundLoaded(900);
-}
-
-function ensureSite3DBackgroundLoaded(delay = 0) {
-    const iframe = document.getElementById('site3d-bg-frame');
-    const bg = document.querySelector('.bg-fx');
-    if (!iframe || iframe.getAttribute('src') || !isAnimatedBackgroundEnabled) return;
-    if (body.classList.contains('static-bg-mode')) return;
-    if (prefersReducedMotion() || isSaveDataMode()) return;
-
-    const src = iframe.dataset.src || getAstralBackgroundUrl(currentAccentTheme);
-    runWhenIdle(() => {
-        if (iframe.getAttribute('src')) return;
-        iframe.src = src;
-        iframe.addEventListener('load', () => {
-            suppressSite3DCursor(iframe);
-            dispatchAccentToSite3D(iframe, currentAccentTheme);
-        }, { once: true });
-        if (bg) bg.classList.remove('bg-fx-mobile-lite');
-        if (bg) bg.classList.add('bg-fx-webgl');
-    }, delay);
-}
-
-function initAstralSkyEffects() {
-    const bg = document.querySelector('.bg-fx');
-    if (!isAnimatedBackgroundEnabled || body.classList.contains('static-bg-mode')) return;
-    if (!bg || bg.querySelector('.astral-sky-layer')) return;
-
-    const layer = document.createElement('div');
-    layer.className = 'astral-sky-layer';
-    layer.setAttribute('aria-hidden', 'true');
-    bg.appendChild(layer);
-
-    const mobileLite = isMobilePerformanceMode();
-    const starCount = mobileLite ? 24 : (window.innerWidth <= 768 ? 46 : 145);
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < starCount; i += 1) {
-        const star = document.createElement('span');
-        const size = Math.random() < 0.12 ? 2.4 + Math.random() * 1.6 : 1 + Math.random() * 1.8;
-        const opacity = 0.28 + Math.random() * 0.58;
-        const duration = 2.4 + Math.random() * 4.8;
-        const delay = -Math.random() * duration;
-
-        star.className = `astral-star${Math.random() < 0.16 ? ' is-bright' : ''}`;
-        star.style.setProperty('--star-x', `${Math.random() * 100}%`);
-        star.style.setProperty('--star-y', `${Math.random() * 100}%`);
-        star.style.setProperty('--star-size', `${size.toFixed(2)}px`);
-        star.style.setProperty('--star-opacity', opacity.toFixed(2));
-        star.style.setProperty('--star-duration', `${duration.toFixed(2)}s`);
-        star.style.setProperty('--star-delay', `${delay.toFixed(2)}s`);
-        fragment.appendChild(star);
-    }
-
-    layer.appendChild(fragment);
-
-    if (prefersReducedMotion() || mobileLite) return;
-
-    const spawnMeteor = () => {
-        if (!isAnimatedBackgroundEnabled || body.classList.contains('static-bg-mode')) return;
-        if (!document.body.contains(layer) || document.hidden) return;
-
-        const meteor = document.createElement('span');
-        meteor.className = 'astral-meteor';
-        meteor.style.setProperty('--meteor-x', `${48 + Math.random() * 50}%`);
-        meteor.style.setProperty('--meteor-y', `${2 + Math.random() * 34}%`);
-        meteor.style.setProperty('--meteor-length', `${110 + Math.random() * 120}px`);
-        meteor.style.setProperty('--meteor-duration', `${1.05 + Math.random() * 0.75}s`);
-        meteor.style.setProperty('--meteor-angle', `${-34 + Math.random() * 12}deg`);
-        meteor.style.setProperty('--meteor-travel-x', `${-520 - Math.random() * 520}px`);
-        meteor.style.setProperty('--meteor-travel-y', `${220 + Math.random() * 300}px`);
-
-        layer.appendChild(meteor);
-        window.setTimeout(() => meteor.remove(), 2400);
-    };
-
-    const scheduleMeteor = () => {
-        if (!isAnimatedBackgroundEnabled || body.classList.contains('static-bg-mode')) return;
-
-        const timerId = window.setTimeout(() => {
-            astralMeteorTimers.delete(timerId);
-            if (!isAnimatedBackgroundEnabled || body.classList.contains('static-bg-mode')) return;
-            spawnMeteor();
-            scheduleMeteor();
-        }, 5200 + Math.random() * 7600);
-        astralMeteorTimers.add(timerId);
-    };
-
-    const firstMeteorTimer = window.setTimeout(() => {
-        astralMeteorTimers.delete(firstMeteorTimer);
-        spawnMeteor();
-    }, 1800 + Math.random() * 2600);
-    astralMeteorTimers.add(firstMeteorTimer);
-    scheduleMeteor();
-}
-
 function getSectionToggleText(isExpanded) {
     if (currentLang === 'en') {
         return isExpanded ? 'Collapse section' : 'Show details';
@@ -2066,7 +1804,7 @@ function syncSectionBodyHeight(section, forceOpen = false) {
     const body = section.querySelector(':scope > .section-collapse-body');
     if (!body) return;
     const isOpen = forceOpen || !section.classList.contains('is-collapsed');
-    body.style.maxHeight = isOpen ? body.scrollHeight + 'px' : '0px';
+    body.style.maxHeight = isOpen ? 'none' : '0px';
 }
 
 function expandSectionById(sectionId) {
@@ -2107,6 +1845,11 @@ function initCollapsibleSections() {
         }
         section.appendChild(bodyWrap);
         syncSectionBodyHeight(section);
+        bodyWrap.addEventListener('transitionend', (event) => {
+            if (event.target === bodyWrap && event.propertyName === 'max-height') {
+                syncSectionBodyHeight(section);
+            }
+        });
 
         const toggleBtn = document.createElement('button');
         toggleBtn.type = 'button';
@@ -2140,7 +1883,13 @@ function initCollapsibleSections() {
                 revealExpandedSectionContent(section);
             }
         
-            window.requestAnimationFrame(() => syncSectionBodyHeight(section, isOpening));
+            window.requestAnimationFrame(() => {
+                if (!body || prefersReducedMotion()) {
+                    syncSectionBodyHeight(section, isOpening);
+                    return;
+                }
+                body.style.maxHeight = isOpening ? body.scrollHeight + 'px' : '0px';
+            });
         });
 
         header.appendChild(toggleBtn);
@@ -2257,12 +2006,8 @@ function initCustomCursor() {
 document.addEventListener('DOMContentLoaded', () => {
     initPageLoadIntro();
     initCollapsibleSections();
-    initHardSelectionGuard();
     initSourceProtection();
-    initAstralSkyEffects();
-    initSite3DBackground();
     initThemeManager();
-    initAnimatedBackgroundToggle();
     initMCPing();
     if (document.getElementById('lanyard-username')) {
         connectLanyard();
@@ -2310,5 +2055,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    initSceneControlDock();
 });

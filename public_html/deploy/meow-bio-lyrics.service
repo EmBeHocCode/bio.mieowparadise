@@ -1,0 +1,33 @@
+[Unit]
+# Archived: current player uses static LRC files. Do not enable this legacy unit.
+Description=Meow Bio timed lyrics cache and recognition worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=meow-bio-lyrics
+Group=www-data
+WorkingDirectory=/opt/meow-bio-lyrics
+ExecStart=/opt/meow-bio-lyrics/venv/bin/python /opt/meow-bio-lyrics/service.py --config /etc/meow-bio-lyrics.json
+Environment=PYTHONUNBUFFERED=1
+Environment=HF_HOME=/var/cache/meow-bio-lyrics/huggingface
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=HF_HUB_DISABLE_TELEMETRY=1
+Environment=HF_HUB_DISABLE_XET=1
+Restart=on-failure
+RestartSec=10
+Nice=15
+CPUQuota=60%
+MemoryHigh=1400M
+MemoryMax=1700M
+MemorySwapMax=256M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/meow-bio-lyrics /var/cache/meow-bio-lyrics
+
+[Install]
+WantedBy=multi-user.target

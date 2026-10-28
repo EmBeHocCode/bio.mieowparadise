@@ -1,11 +1,18 @@
+::selection {
+    background-color: #ff0066;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: none;
+}
+
 /* =========================================================================
    THEME VARIABLES (Cyber-Emerald & Dark-Slate)
    ========================================================================= */
 
 :root {
-    --bg-base: #060910;
-    --bg-panel: rgba(13, 19, 31, 0.4);
-    --bg-panel-hover: rgba(18, 26, 43, 0.6);
+    --bg-base: #050505;
+    --bg-panel: rgba(8, 8, 8, 0.88);
+    --bg-panel-hover: rgba(18, 18, 18, 0.94);
     --primary-color: #ff0066;
     --primary-rgb: 255, 0, 102;
     --accent-text-color: var(--primary-color);
@@ -110,38 +117,6 @@
     font-size: 0.85rem;
 }
 
-.animated-bg-toggle {
-    width: auto;
-    min-width: 140px;
-    padding: 0 0.85rem;
-    gap: 0.45rem;
-}
-
-.animated-bg-toggle i {
-    font-size: 0.92rem;
-}
-
-.animated-bg-label {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-}
-
-.animated-bg-toggle.is-on {
-    border-color: var(--effect-border-color);
-    background: var(--effect-active-bg);
-    color: var(--effect-text-color);
-    box-shadow: 0 6px 18px var(--effect-glow-color);
-}
-
-.animated-bg-toggle.is-static {
-    color: var(--text-muted);
-    border-color: rgba(var(--primary-rgb), 0.16);
-    background: rgba(10, 14, 24, 0.66);
-}
-
 #theme-manager-toggle.active {
     border-color: var(--effect-border-color);
     background: var(--effect-active-bg);
@@ -158,7 +133,7 @@
     display: grid;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(7, 11, 18, 0.88);
+    background: rgba(7, 7, 7, 0.94);
     border: 1px solid var(--border-lit);
     border-radius: 18px;
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.44), 0 0 24px var(--primary-glow);
@@ -431,8 +406,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-user-select: none;
-    user-select: none;
     -webkit-user-drag: none;
 }
 
@@ -443,6 +416,7 @@ html {
 }
 
 body {
+    isolation: isolate;
     background-color: var(--bg-base);
     color: var(--text-main);
     font-family: var(--font-sans);
@@ -459,25 +433,15 @@ body.bio-intro-active {
     overflow: hidden;
 }
 
-body > :not(#bio-load-intro) {
+body > :not(#bio-load-intro):not(.bg-fx):not(.section-particles-layer) {
     transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-body.bio-intro-active > :not(#bio-load-intro) {
+body.bio-intro-active > :not(#bio-load-intro):not(.bg-fx):not(.section-particles-layer) {
     opacity: 0.14;
     filter: blur(10px) saturate(0.78);
     transform: scale(1.015);
     pointer-events: none;
-}
-
-body.bio-intro-active > .bg-fx {
-    opacity: 0.68;
-    filter: blur(1.4px) saturate(1.08);
-    transform: scale(1.03);
-}
-
-body.bio-intro-active > .bg-fx .site3d-bg-frame {
-    opacity: 0.72;
 }
 
 input,
@@ -1023,178 +987,30 @@ ul {
 .bg-fx {
     position: fixed;
     inset: 0;
-    z-index: -1;
+    z-index: 0;
     overflow: hidden;
-    background-color: var(--bg-base);
-    opacity: 1;
+    pointer-events: none;
+    background: #050505;
+    contain: strict;
 }
 
+.letter-glitch-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+/* Neutral black base; glyph colors provide the ambient accents. */
 .bg-fx::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background:
-        radial-gradient(circle at 52% 50%, rgba(var(--primary-rgb), 0.2), transparent 48%),
-        radial-gradient(circle at 50% 56%, rgba(var(--primary-rgb), 0.12), transparent 66%);
-    mix-blend-mode: screen;
-    opacity: 0.75;
-    transition: opacity 0.35s ease;
-}
-
-.site3d-bg-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    border: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.45s ease;
-    contain: strict;
-    z-index: 1;
-}
-
-.bg-fx-webgl .site3d-bg-frame {
-    opacity: 1;
-}
-
-.astral-sky-layer {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-    contain: strict;
-}
-
-.astral-star {
-    position: absolute;
-    width: var(--star-size, 2px);
-    height: var(--star-size, 2px);
-    left: var(--star-x, 50%);
-    top: var(--star-y, 50%);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.72), 0 0 14px var(--accent-soft-35);
-    opacity: var(--star-opacity, 0.45);
-    animation: astral-star-twinkle var(--star-duration, 3.6s) ease-in-out infinite;
-    animation-delay: var(--star-delay, 0s);
-}
-
-.astral-star.is-bright {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.95), 0 0 20px var(--accent-soft-52);
-}
-
-.astral-meteor {
-    position: absolute;
-    left: var(--meteor-x, 80%);
-    top: var(--meteor-y, 12%);
-    width: var(--meteor-length, 150px);
-    height: 2px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.92) 52%, var(--primary-color));
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.72), 0 0 22px var(--accent-soft-45);
-    opacity: 0;
-    transform: rotate(var(--meteor-angle, -28deg)) translate3d(0, 0, 0);
-    animation: astral-meteor-fall var(--meteor-duration, 1.45s) cubic-bezier(0.2, 0.62, 0.25, 1) forwards;
-}
-
-@keyframes astral-star-twinkle {
-    0%,
-    100% {
-        opacity: calc(var(--star-opacity, 0.45) * 0.5);
-        transform: scale(0.76);
-    }
-    42% {
-        opacity: calc(var(--star-opacity, 0.45) * 1.35);
-        transform: scale(1.25);
-    }
-    58% {
-        opacity: calc(var(--star-opacity, 0.45) * 0.82);
-        transform: scale(0.92);
-    }
-}
-
-@keyframes astral-meteor-fall {
-    0% {
-        opacity: 0;
-        transform: rotate(var(--meteor-angle, -28deg)) translate3d(0, 0, 0);
-    }
-    12% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        transform: rotate(var(--meteor-angle, -28deg)) translate3d(var(--meteor-travel-x, -760px), var(--meteor-travel-y, 360px), 0);
-    }
-}
-
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
-    .astral-meteor {
-        display: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .astral-star,
-    .astral-meteor,
-    .site3d-bg-frame {
-        animation: none !important;
-        transition: none !important;
-    }
-}
-
-/* Add an overlay to ensure contrast */
-
-.bg-fx::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(6, 9, 16, 0.26), rgba(6, 9, 16, 0.76));
-    z-index: 1;
-    transition: opacity 0.35s ease;
-}
-
-body.static-bg-mode .bg-fx {
-    background:
-        radial-gradient(circle at 50% 38%, rgba(var(--primary-rgb), 0.12), transparent 34%),
-        radial-gradient(circle at 18% 16%, rgba(var(--primary-rgb), 0.06), transparent 22%),
-        radial-gradient(circle at 82% 78%, rgba(124, 58, 237, 0.08), transparent 28%),
-        linear-gradient(145deg, #060910 0%, #0a0a1a 52%, #1a0a1a 100%);
-}
-
-body.static-bg-mode .bg-fx::before {
-    opacity: 0.5;
-    background:
-        radial-gradient(circle at 52% 50%, rgba(var(--primary-rgb), 0.14), transparent 48%),
-        radial-gradient(circle at 50% 56%, rgba(var(--primary-rgb), 0.08), transparent 66%);
-    mix-blend-mode: screen;
-}
-
-body.static-bg-mode .bg-fx::after {
-    opacity: 1;
-    background:
-        linear-gradient(180deg, rgba(6, 9, 16, 0.28), rgba(6, 9, 16, 0.86)),
-        linear-gradient(rgba(var(--primary-rgb), 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(var(--primary-rgb), 0.045) 1px, transparent 1px);
-    background-size: 100% 100%, 56px 56px, 56px 56px;
-    background-position: center, 0 0, 0 0;
-}
-
-body.static-bg-mode .site3d-bg-frame,
-body.static-bg-mode .astral-sky-layer,
-body.static-bg-mode .astral-star,
-body.static-bg-mode .astral-meteor {
-    display: none !important;
-    opacity: 0 !important;
-    animation: none !important;
-}
-
-body.ui-hidden:not(.static-bg-mode) .bg-fx::after {
-    opacity: 0;
+    background: none;
 }
 
 body.ui-hidden {
@@ -1237,73 +1053,9 @@ body.ui-hidden .content-wrapper {
     pointer-events: none;
     transform: scale(0.985);
 }
-
-.scene-control-dock {
-    position: fixed;
-    left: 50%;
-    bottom: 22px;
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    border: 1px solid rgba(var(--primary-rgb), 0.28);
-    border-radius: 8px;
-    background: linear-gradient(180deg, rgba(10, 14, 26, 0.78), rgba(6, 8, 16, 0.62));
-    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.42), 0 0 30px rgba(var(--primary-rgb), 0.16);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translate(-50%, 12px);
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-}
-
-body.ui-hidden .scene-control-dock {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translate(-50%, 0);
-}
-
-.scene-control-btn {
-    width: 38px;
-    height: 38px;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(var(--primary-rgb), 0.32);
-    border-radius: 8px;
-    color: var(--accent-text-color);
-    background: rgba(var(--primary-rgb), 0.1);
-    box-shadow: inset 0 0 16px rgba(var(--primary-rgb), 0.08);
-    transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-}
-
-.scene-control-btn:hover {
-    transform: translateY(-1px);
-    border-color: rgba(var(--primary-rgb), 0.62);
-    background: rgba(var(--primary-rgb), 0.18);
-}
-
-.scene-control-tip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 38px;
-    padding: 0 10px;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-    color: rgba(235, 243, 255, 0.78);
-    font: 700 0.72rem/1 var(--font-mono);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-}
-
-.scene-control-tip i {
-    color: var(--accent-text-color);
-}
-
 .app-container {
+    position: relative;
+    z-index: 1;
     display: flex;
     justify-content: center;
     max-width: 1550px;
@@ -1613,7 +1365,7 @@ body.ui-hidden .scene-control-dock {
     display: grid;
     gap: 0.75rem;
     margin-bottom: 1rem;
-    background: #080b0e;
+    background: #080808;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     text-align: left;
@@ -1672,7 +1424,7 @@ body.ui-hidden .scene-control-dock {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 3px solid #080b0e;
+    border: 3px solid #080808;
     background-color: #747f8d;
     /* offline */
     z-index: 3;
@@ -3157,13 +2909,6 @@ body.ui-hidden .scene-control-dock {
     .control-btn .lang-text {
         font-size: 0.78rem;
     }
-    .animated-bg-toggle {
-        min-width: 126px;
-        padding: 0 0.7rem;
-    }
-    .animated-bg-label {
-        font-size: 0.68rem;
-    }
     .theme-manager-panel {
         top: 4.15rem;
         right: 0.9rem;
@@ -3247,16 +2992,7 @@ body.ui-hidden .scene-control-dock {
 }
 
 @media (max-width: 520px) {
-    .animated-bg-toggle {
-        min-width: 78px;
-        padding: 0 0.52rem;
-        gap: 0.34rem;
-    }
 
-    .animated-bg-label {
-        display: inline;
-        font-size: 0.6rem;
-    }
 }
 
 @media (max-width: 768px) {
@@ -3681,14 +3417,7 @@ body.custom-cursor-enabled .link-btn {
    ========================================================================= */
 
 @media (max-width: 768px) {
-    .bg-fx-mobile-lite .site3d-bg-frame {
-        display: none;
-        opacity: 0;
-    }
 
-    .bg-fx {
-        background: linear-gradient(145deg, rgba(18, 24, 38, 0.95), rgba(8, 11, 18, 1) 62%, rgba(28, 12, 24, 0.96));
-    }
 
     .glass-card,
     .profile-card,
@@ -3705,7 +3434,7 @@ body.custom-cursor-enabled .link-btn {
     }
 
     .glass-card {
-        background: rgba(13, 19, 31, 0.82);
+        background: rgba(8, 8, 8, 0.9);
         transform: none;
         will-change: auto;
     }
@@ -3722,14 +3451,7 @@ body.custom-cursor-enabled .link-btn {
         transform: none !important;
     }
 
-    .astral-star {
-        animation: none !important;
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.42);
-    }
 
-    .astral-star.is-bright {
-        box-shadow: 0 0 8px rgba(255, 255, 255, 0.64);
-    }
 
     .bio-load-intro {
         display: none !important;
@@ -3746,8 +3468,7 @@ body.custom-cursor-enabled .link-btn {
 body.ui-hidden .top-left-controls,
 body.ui-hidden .top-right-controls,
 body.ui-hidden .floating-view-badge,
-body.ui-hidden .floating-music-btn,
-body.ui-hidden .scene-control-dock {
+body.ui-hidden .floating-music-btn {
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
@@ -3778,9 +3499,6 @@ body.ui-hidden .floating-music-btn {
     z-index: 1006;
 }
 
-body.ui-hidden .scene-control-dock {
-    z-index: 1005;
-}
 
 
 /* =========================================================================
@@ -3788,21 +3506,13 @@ body.ui-hidden .scene-control-dock {
    ========================================================================= */
 
 :root {
-    --bg-panel: rgba(8, 12, 24, 0.72);
-    --bg-panel-hover: rgba(13, 18, 34, 0.86);
+    --bg-panel: rgba(8, 8, 8, 0.88);
+    --bg-panel-hover: rgba(18, 18, 18, 0.94);
     --text-muted: #c8d4e8;
     --border-radius: 14px;
 }
 
-.bg-fx::before {
-    opacity: 0.42;
-}
 
-.bg-fx::after {
-    background:
-        radial-gradient(circle at 50% 32%, rgba(6, 9, 18, 0.28), rgba(6, 9, 18, 0.66) 46%, rgba(3, 5, 12, 0.84) 100%),
-        linear-gradient(180deg, rgba(6, 9, 16, 0.42), rgba(4, 7, 14, 0.88));
-}
 
 .glass-card,
 .discord-widget,
@@ -3816,7 +3526,7 @@ body.ui-hidden .scene-control-dock {
 }
 
 .glass-card {
-    background: linear-gradient(180deg, rgba(10, 15, 28, 0.8), rgba(8, 11, 22, 0.72));
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.92), rgba(5, 5, 5, 0.9));
     border-color: color-mix(in srgb, var(--primary-color) 32%, rgba(255, 255, 255, 0.12));
 }
 
@@ -3979,17 +3689,11 @@ body.ui-hidden .scene-control-dock {
 }
 
 @media (max-width: 768px) {
-    .bg-fx::before {
-        opacity: 0.3;
-    }
 
-    .bg-fx::after {
-        background: linear-gradient(180deg, rgba(5, 8, 16, 0.74), rgba(3, 5, 10, 0.92));
-    }
 
     .glass-card,
     .profile-card {
-        background: rgba(9, 13, 25, 0.9);
+        background: rgba(8, 8, 8, 0.9);
         border-color: rgba(var(--primary-rgb), 0.28);
     }
 
@@ -4077,9 +3781,7 @@ body.ui-hidden .scene-control-dock {
     align-items: end;
     gap: 1.25rem;
     margin-bottom: 1.25rem;
-    background:
-        linear-gradient(135deg, rgba(255, 0, 102, 0.12), rgba(139, 92, 246, 0.1) 42%, rgba(6, 182, 212, 0.07)),
-        rgba(8, 12, 24, 0.78);
+    background: rgba(8, 8, 8, 0.96);
 }
 
 .security-lab-copy {
@@ -4140,9 +3842,7 @@ body.ui-hidden .scene-control-dock {
     overflow: hidden;
     border-radius: 16px;
     border: 1px solid rgba(var(--primary-rgb), 0.24);
-    background:
-        linear-gradient(180deg, rgba(255, 0, 102, 0.08), rgba(139, 92, 246, 0.045) 42%, rgba(6, 9, 18, 0.92)),
-        rgba(5, 8, 18, 0.92);
+    background: rgba(5, 5, 5, 0.96);
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.055);
 }
 
@@ -4152,7 +3852,7 @@ body.ui-hidden .scene-control-dock {
     height: clamp(700px, 78vh, 880px);
     border: 0;
     border-radius: 12px;
-    background: #050816;
+    background: #050505;
     color-scheme: dark;
 }
 
@@ -4193,7 +3893,7 @@ body.ui-hidden .scene-control-dock {
 /* Keep Security Lab dark even if theme state is light */
 
 .security-lab-iframe {
-    background: #050816 !important;
+    background: #050505 !important;
 }
 
 
@@ -4251,15 +3951,7 @@ iframe {
         border-radius: 12px;
     }
 
-    .animated-bg-toggle {
-        min-width: 84px;
-        padding: 0 0.58rem;
-        gap: 0.36rem;
-    }
 
-    .animated-bg-label {
-        font-size: 0.62rem;
-    }
 
     .app-container {
         width: 100%;
@@ -4687,14 +4379,7 @@ iframe {
         --avatar-image-size: 66px;
     }
 
-    .animated-bg-toggle {
-        min-width: 74px;
-        padding-inline: 0.46rem;
-    }
 
-    .animated-bg-label {
-        font-size: 0.58rem;
-    }
 
     .section-title {
         font-size: 1.85rem;
@@ -4707,4 +4392,37 @@ iframe {
     .security-lab-tags span {
         white-space: normal;
     }
+}
+
+
+/* One shared field: rounded card surfaces and particles, below card content. */
+.section-particles-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+}
+.section-particles-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* The shared renderer paints the dark surfaces as well as their particles.
+   Transparent CSS surfaces reveal that field directly under the card text.
+   Normal glass backgrounds remain the fallback when WebGL2 is unavailable. */
+body.particles-cards-ready [data-particles-section] .glass-card,
+body.particles-cards-ready [data-particles-card] {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+/* Menu surfaces stay neutral; brand colors remain on icons, text and borders. */
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(16, 16, 16, 0.94);
 }

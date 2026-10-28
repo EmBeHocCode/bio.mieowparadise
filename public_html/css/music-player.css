@@ -86,7 +86,7 @@ body:has(.music-player.active) .theme-manager-panel.active { z-index: 1008; }
 .music-player .music-track-list { max-height: 188px; }
 .music-player .music-track-item { padding: 10px 12px; }
 .music-player .music-playlist-head { font-size: .65rem; }
-.music-lyrics { min-width: 0; border: 1px solid var(--effect-soft-line); border-radius: 15px; padding: 12px 16px 10px; background: #080808a6; }
+.music-lyrics { min-width: 0; border: 1px solid transparent; border-radius: 15px; padding: 12px 16px 10px; background: #080808a6; }
 .music-lyrics-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--text-muted); font: 500 .67rem var(--font-sans); }
 .music-lyrics-head > span:first-child { display: flex; align-items: center; gap: 7px; }
 .music-lyrics-badge { color: var(--effect-text-color); font-size: .6rem; font-variant-numeric: tabular-nums; }

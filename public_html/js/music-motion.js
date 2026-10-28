@@ -15,7 +15,7 @@
         const target = { x: 0, y: 0, lift: 1 };
         let open = false, entering = false, held = false, raf = 0, last = 0;
         const clamp = value => Math.min(1, Math.max(-1, value));
-        const enabled = () => open && !entering && !held && mouse.matches && !reduced.matches && !document.hidden;
+        const enabled = () => open && !entering && !held && mouse.matches && !reduced.matches && !document.hidden && !panel.querySelector('.music-select.is-open');
         function paint() {
             panel.style.setProperty('--music-tilt-x', `${state.x.toFixed(3)}deg`);
             panel.style.setProperty('--music-tilt-y', `${state.y.toFixed(3)}deg`);

@@ -1894,42 +1894,6 @@ function initBackToTop() {
 }
 
 
-function initSecurityLabEmbed() {
-    const frame = document.querySelector('.security-lab-iframe');
-    const section = document.getElementById('security-lab');
-    if (!frame || !section) return;
-
-    let isFrameInViewport = false;
-
-    const postPauseState = () => {
-        const paused = section.classList.contains('is-collapsed') || !isFrameInViewport || document.hidden;
-        frame.contentWindow?.postMessage({ type: 'securityLab:setPaused', paused }, '*');
-    };
-
-    const sync = () => {
-        if (typeof syncSectionBodyHeight === 'function' && !section.classList.contains('is-collapsed')) {
-            syncSectionBodyHeight(section, true);
-        }
-        postPauseState();
-    };
-
-    if ('IntersectionObserver' in window) {
-        new IntersectionObserver((entries) => {
-            isFrameInViewport = entries.some((entry) => entry.isIntersecting);
-            postPauseState();
-        }, { rootMargin: '160px 0px', threshold: 0.01 }).observe(frame);
-    } else {
-        isFrameInViewport = true;
-    }
-
-    new MutationObserver(sync).observe(section, { attributes: true, attributeFilter: ['class'] });
-    frame.addEventListener('load', sync);
-    document.addEventListener('visibilitychange', postPauseState);
-    window.addEventListener('resize', sync, { passive: true });
-    window.addEventListener('scroll', postPauseState, { passive: true });
-    sync();
-}
-
 // Initialize client-side features on load
 document.addEventListener('DOMContentLoaded', () => {
     initPageLoadIntro();
@@ -1943,7 +1907,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initViewCounter();
     initMusicPlayer();
     initFocusBubble();
-    initSecurityLabEmbed();
 
     // Toggle Status Bubble by clicking Avatar
     const avatarContainer = document.querySelector('.discord-avatar-container');

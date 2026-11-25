@@ -1,5 +1,15 @@
 # Web bio tren VPS
 
+## Dong bo source ngay 26/11/2026
+
+Repository: https://github.com/EmBeHocCode/bio.mieowparadise, nhanh `main`.
+Ma nguon nam trong thu muc `public_html/` cua repository.
+Ban dong bo nay bao gom anh dai dien va 4 LRC da sua truc tiep tren VPS,
+cung 2 MP3 bo sung tren server. Ban local truoc khi dong bo duoc sao luu
+ngoai public_html, tai `backups/source-sync-20261126/local-before/`.
+`deploy/release-manifest.sha256` ghi SHA-256 cua toan bo 106 file trong goi
+web; doi chieu manifest nay voi VPS de xac nhan deploy du file.
+
 ## Dia chi va thu muc
 
 - Website: https://bio.mieowparadise.io.vn/

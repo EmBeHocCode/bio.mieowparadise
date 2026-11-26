@@ -10,7 +10,7 @@ function fixture(t) {
     const temp = mkdtempSync(join(tmpdir(), 'meow-bio-pages-'));
     t.after(() => rmSync(temp, { recursive: true, force: true }));
     const root = join(temp, 'public_html');
-    for (const dir of ['css', 'js', 'assets/cover-png', 'assets/music']) mkdirSync(join(root, dir), { recursive: true });
+    for (const dir of ['css', 'js', 'assets/cover-png', 'assets/music', 'assets/vendor/component']) mkdirSync(join(root, dir), { recursive: true });
     for (const [file, data] of Object.entries({
         'index.html': '<html>Meow</html>', 'css/style.css': 'body{}', 'js/app.js': 'void 0;',
         'assets/cover-png/a.png': 'cover-a', 'assets/cover-png/b.gif': 'cover-b',
@@ -19,6 +19,7 @@ function fixture(t) {
         'assets/music/song.lrc': '[00:01]Loi bai hat',
         'assets/archive.zip': 'archive', 'assets/old.gif.1': 'old',
         'assets/.env': 'TEST_ONLY_NOT_A_SECRET', 'assets/notes.md': 'notes',
+        'assets/vendor/component/LICENSE.md': 'Third-party notice',
     })) writeFileSync(join(root, file), data);
     return { root, output: join(temp, 'site') };
 }
@@ -31,6 +32,7 @@ test('Pages includes only runtime files, with no PHP, archives, notes or environ
     for (const file of ['assets/cover-png/index.php', 'assets/archive.zip', 'assets/old.gif.1', 'assets/.env', 'assets/notes.md']) assert.equal(existsSync(join(options.output, file)), false);
     assert.deepEqual(readFileSync(join(options.output, 'assets/music/song.mp3')), readFileSync(join(options.root, 'assets/music/song.mp3')));
     assert.equal(readFileSync(join(options.output, 'assets/music/song.lrc'), 'utf8'), '[00:01]Loi bai hat');
+    assert.equal(readFileSync(join(options.output, 'assets/vendor/component/LICENSE.md'), 'utf8'), 'Third-party notice');
 });
 
 test('cover catalog is deterministic, sorted and content-versioned', t => {

@@ -13,7 +13,8 @@ function listFiles(directory, recursive = true) {
         if (entry.isSymbolicLink() || entry.name.startsWith('.') || /(?:\.1|-old|_old)$/i.test(entry.name) || entry.name.startsWith('chrome-')) return [];
         const path = join(directory, entry.name);
         if (entry.isDirectory()) return recursive ? listFiles(path) : [];
-        return entry.isFile() && extensions.has(extname(entry.name).toLowerCase()) ? [path] : [];
+        const vendorNotice = path.split(sep).includes('vendor') && /^(?:LICENSE|NOTICE|README)\.md$/i.test(entry.name);
+        return entry.isFile() && (extensions.has(extname(entry.name).toLowerCase()) || vendorNotice) ? [path] : [];
     });
 }
 

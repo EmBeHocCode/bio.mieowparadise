@@ -1,0 +1,43 @@
+name: Bio GitHub Pages preview
+
+on:
+  push:
+    branches: [main, codex/github-pages-preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bio-github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Test Pages packaging
+        run: node --test public_html/tests/pages-build.test.mjs public_html/tests/music-covers.test.mjs
+      - name: Test existing lyrics parser
+        run: node public_html/tests/music-lrc.test.cjs
+      - name: Build static site
+        run: node public_html/deploy/build-pages.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy preview without changing DNS
+        id: deployment
+        uses: actions/deploy-pages@v4

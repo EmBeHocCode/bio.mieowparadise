@@ -26,3 +26,8 @@ backups/
 *.1
 *-old
 *_old
+
+# Generated Pages artifacts and local visual checks
+_site/
+.pages-preview*/
+test-results/

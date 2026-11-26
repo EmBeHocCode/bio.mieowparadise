@@ -1,5 +1,13 @@
 # Meow Bio
 
+## GitHub Pages Preview
+
+- Preview branch: `codex/github-pages-preview`; AWS and custom-domain DNS stay unchanged.
+- Run `node --test public_html/tests/pages-build.test.mjs public_html/tests/music-covers.test.mjs` and `node public_html/tests/music-lrc.test.cjs`.
+- Run `node public_html/deploy/build-pages.mjs` to create `_site/` (the output must not already exist).
+- The build generates `assets/cover-png/catalog.json`; PHP, archives and deployment tools are not published.
+- New covers and MP3/LRC files are included on the next build. Enable Pages with GitHub Actions before deployment.
+
 Website cá nhân của **Meow Bebyboi — Nguyễn Lâm Hùng**.
 
 - Website đang chạy: https://bio.mieowparadise.io.vn/

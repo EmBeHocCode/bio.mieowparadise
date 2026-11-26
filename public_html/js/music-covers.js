@@ -2,6 +2,7 @@
 (() => {
     const extensions = /\.(png|jpe?g|webp|gif|avif)$/i;
     const folder = new URL('./assets/cover-png/', document.baseURI);
+    const catalog = new URL('catalog.json', folder);
     const placeholder = new URL('./assets/music/cover-placeholder.svg', document.baseURI).href;
     const shuffle = (items) => {
         const copy = [...items];
@@ -69,7 +70,11 @@
             request = controller;
             const timeout = setTimeout(() => controller.abort(), 8000);
             try {
-                const response = await fetch(folder.href, { cache: 'no-store', signal: controller.signal });
+                let response = await fetch(catalog.href, { cache: 'no-cache', signal: controller.signal });
+                // Keep PHP/directory-listing previews compatible outside Pages.
+                if (!response.ok) {
+                    response = await fetch(folder.href, { cache: 'no-store', signal: controller.signal });
+                }
                 const entries = await readCatalog(response);
                 if (disposed || controller.signal.aborted) return;
                 const unique = new Map();

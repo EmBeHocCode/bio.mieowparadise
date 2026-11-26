@@ -34,7 +34,8 @@ const server = createServer((req, res) => {
     let browser;
     try {
         await new Promise((done, fail) => { server.once('error', fail); server.listen(0, '127.0.0.1', done); });
-        const url = `http://127.0.0.1:${server.address().port}${mount}`;
+        const url = process.argv[2] || `http://127.0.0.1:${server.address().port}${mount}`;
+        const screenshotPrefix = process.argv[2] ? 'online-pages' : 'pages';
         const libraryContext = vm.createContext({ window: {} });
         vm.runInContext(readFileSync(join(root, 'js/music-library.js'), 'utf8'), libraryContext);
         let tracks = 0;
@@ -99,10 +100,10 @@ const server = createServer((req, res) => {
             await page.waitForFunction(() => getComputedStyle(document.getElementById('music-content')).opacity === '0' && getComputedStyle(document.getElementById('music-backdrop')).opacity === '0');
             const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
             assert.equal(overflow, false, 'Unexpected horizontal page overflow');
-            await page.screenshot({ path: join(results, `pages-${viewport.width}.png`) });
+            await page.screenshot({ path: join(results, `${screenshotPrefix}-${viewport.width}.png`) });
             await page.locator('#music-toggle-btn').click();
             await page.waitForFunction(() => getComputedStyle(document.getElementById('music-content')).opacity === '1');
-            await page.screenshot({ path: join(results, `pages-music-${viewport.width}.png`) });
+            await page.screenshot({ path: join(results, `${screenshotPrefix}-music-${viewport.width}.png`) });
             await page.locator('#bg-music').evaluate(audio => audio.pause());
             assert.deepEqual(errors, [], 'JavaScript runtime errors');
             assert.deepEqual(localErrors, [], 'Static asset HTTP errors');

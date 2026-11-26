@@ -7,6 +7,7 @@
 - Run `node public_html/deploy/build-pages.mjs` to create `_site/` (the output must not already exist).
 - The build generates `assets/cover-png/catalog.json`; PHP, archives and deployment tools are not published.
 - New covers and MP3/LRC files are included on the next build. Enable Pages with GitHub Actions before deployment.
+- Optional browser QA (requires Playwright and Edge): `node public_html/tests/pages-browser-smoke.cjs [preview-url]`.
 
 Website cá nhân của **Meow Bebyboi — Nguyễn Lâm Hùng**.
 
